@@ -1,0 +1,8 @@
+META-INF/*
+WEB-INF/*
+web/pwc/**
+.idea/**
+private.properties
+watcher-config.json
+.babelrc
+app/start.js
