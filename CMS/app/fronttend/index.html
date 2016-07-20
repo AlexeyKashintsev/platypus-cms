@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>image_viewer</title>
+    <script src="viewer.js"></script>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <!-- built files will be auto injected -->
+
+
+    <div id="imageViewer">
+
+      <div  v-for="image in images" track-by="$index" >
+        <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
+      </div>
+
+      <image-original v-bind:url-original="currentImage.urlOriginal">{{currentImage}}</image-original>
+    </div>
+
+
+
+
+  </body>
+</html>
