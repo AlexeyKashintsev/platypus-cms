@@ -17,20 +17,20 @@ define('Form', ['orm', 'forms', 'ui', 'rpc'], function (Orm, Forms, Ui, Rpc, Mod
         // TODO : place your code here
 
         form.button.onActionPerformed = function () {
-//            Server.insertItemFromServer({
-//                name: '2.jpg',
-//                description: 1,
-//                type: 1,
-//                url: '/2.jpg'
-//            },
-//                    'http://st1.styapokupayu.ru/images/product/009/969/753_small.jpg', function (Text) {
-//                        console.log(Text);
-//                    }, function (Text) {
-//                console.log(Text);
-//            });
-//            Server.getInfo(function(Data) {
-//                console.log(Data);
-//            });
+            Server.insertItemFromServer({
+                name: '9.jpg',
+                description: 1,
+                type: 1,
+                url: '/9.jpg'
+            },
+                    'http://st1.styapokupayu.ru/images/product/009/969/753_small.jpg', function (Text) {
+                        console.log(Text);
+                    }, function (Text) {
+                console.log(Text);
+            });
+            Server.getInfo(function(Data) {
+                console.log(Data);
+            });
 //            Server.getSmallImageDirectory(function(Text) {
 //                console.log(Text);
 //            });

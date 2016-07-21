@@ -12,13 +12,24 @@
         <!-- built files will be auto injected -->
 
         <div id="imageViewer">
-            <div class="gallary">
+            <div class="gallery">
+                <div style="padding: 1%;">Gallery:</div>
                 <div class="previewForm" v-for="image in images" track-by="$index" >
                     <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
                 </div>
             </div>
             <div class="originalForm">
-                <image-original v-bind:url-original="currentImage.urlOriginal">{{currentImage}}</image-original>
+                <div class="picture">
+                    <image-original class="originImage" v-bind:url-original="currentImage.urlOriginal"></image-original>
+                </div>
+                <div class="information">
+                    <span>Information:</span>
+                    <div class="info">
+                        <span><pre>Name: </pre></span><info-name></info-name></br>
+                        <span><pre>Type: </pre></span><info-type></info-type></br>
+                        <span><pre>Description: </pre></span><info-description></info-description></br><textarea v-model="description"></textarea>
+                      </div>
+                </div>
             </div>
         </div>
     </body>

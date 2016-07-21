@@ -9,12 +9,14 @@ require(['environment', 'Server'], function (F, S) {
     new Vue({
         el: '#imageViewer',
         data: {
+            description: '',
             currentImage: function (img) {
                 return img;
             },
             images: []
         },
         ready: function () {
+            this.description = '';
             this.currentImage(this.getData(this.images)[0]);
         },
         methods: {
@@ -39,7 +41,8 @@ require(['environment', 'Server'], function (F, S) {
             'clickOnPreview': function (urlPreview) {
                 for (var i = 0, length = this.images.length; i < length; i++) {
                     if (this.images[i].urlPreview === urlPreview) {
-                        this.$broadcast('clickOnPreview', this.images[i].urlOriginal);
+                        this.$broadcast('clickOnPreview', this.images[i]);
+                        this.description = this.images[i].description;
                     }
                     ;
                 }
@@ -65,8 +68,35 @@ require(['environment', 'Server'], function (F, S) {
                 template: '<img v-bind:src="urlOriginal">',
                 props: ['urlOriginal'],
                 events: {
-                    'clickOnPreview': function (urlOriginal) {
-                        this.urlOriginal = urlOriginal;
+                    'clickOnPreview': function (data) {
+                        this.urlOriginal = data.urlOriginal;
+                    }
+                }
+            },
+            'infoDescription': {
+                template: '{{description}}',
+                props: ['description'],
+                events: {
+                    'clickOnPreview': function (data) {
+                        this.description = data.description;
+                    }
+                }
+            },
+            'infoName': {
+                template: '{{name}}',
+                props: ['name'],
+                events: {
+                    'clickOnPreview': function (data) {
+                        this.name = data.name;
+                    }
+                }
+            },
+            'infoType': {
+                template: '{{type}}',
+                props: ['type'],
+                events: {
+                    'clickOnPreview': function (data) {
+                        this.type = data.type;
                     }
                 }
             }
