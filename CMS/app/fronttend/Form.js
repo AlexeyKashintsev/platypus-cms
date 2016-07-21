@@ -7,7 +7,8 @@ define('Form', ['orm', 'forms', 'ui', 'rpc'], function (Orm, Forms, Ui, Rpc, Mod
         var self = this
                 , model = Orm.loadModel(ModuleName)
                 , form = Forms.loadForm(ModuleName, model)
-                , Server = new Rpc.Proxy('Server');
+                , Server = new Rpc.Proxy('Server')
+                , FileUtils = new Rpc.Proxy('FileUtils');
 
         self.show = function () {
             form.show();
@@ -20,19 +21,19 @@ define('Form', ['orm', 'forms', 'ui', 'rpc'], function (Orm, Forms, Ui, Rpc, Mod
 //                name: '2.jpg',
 //                description: 1,
 //                type: 1,
-//                URL: '/2.jpg'
+//                url: '/2.jpg'
 //            },
 //                    'http://st1.styapokupayu.ru/images/product/009/969/753_small.jpg', function (Text) {
 //                        console.log(Text);
 //                    }, function (Text) {
 //                console.log(Text);
 //            });
-            Server.getInfo(function(Data) {
-                console.log(Data);
-            });
-            Server.getSmallImageDirectory(function(Text) {
-                console.log(Text);
-            });
+//            Server.getInfo(function(Data) {
+//                console.log(Data);
+//            });
+//            Server.getSmallImageDirectory(function(Text) {
+//                console.log(Text);
+//            });
         };
 
         model.requery(function () {

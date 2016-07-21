@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--    <meta name="platypus-server" content="http://localhost:8084/cms"/>-->
+        <title>image_viewer</title>
+        <script type="text/javascript" src="web/pwc/pwc.nocache.js" source-path="app" entry-point="viewer"></script>
+        <script src="/cms/app/fronttend/vue.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+    </head>
+    <body>
+        <!-- built files will be auto injected -->
+
+        <div id="imageViewer">
+            <div class="gallary">
+                <div class="previewForm" v-for="image in images" track-by="$index" >
+                    <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
+                </div>
+            </div>
+            <div class="originalForm">
+                <image-original v-bind:url-original="currentImage.urlOriginal">{{currentImage}}</image-original>
+            </div>
+        </div>
+    </body>
+</html>

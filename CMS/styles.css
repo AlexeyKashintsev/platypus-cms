@@ -1,0 +1,24 @@
+.imageViewer {
+    display: block;
+}
+.gallary {
+    width:60%;
+    height: 200px;
+    display:block;
+    background-color: red;
+    display:inline-block;
+    position: relative;
+}
+.previewForm {
+    display:inline-block;
+    margin: 5%;
+}
+.originalForm {
+    width: 39%;
+    height: 200px;
+    background-color:green;
+    display:inline-block;
+}
+.image-preview {
+    display:inline-block;
+}

@@ -9,6 +9,7 @@ define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, Modul
         var self = this, model = Orm.loadModel(ModuleName)
                 , FileUtils = new Rpc.Proxy('FileUtils');
         
+        var Context = Settings.Context;
         var SmallImageDirectory = Settings.SmallImageDirectory;
         
         self.deleteItems = function (aData, callback, error) {
@@ -39,16 +40,16 @@ define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, Modul
                     name: aData.name,
                     description: aData.description,
                     type: aData.type,
-                    URL: aData.URL
+                    url: aData.url
                 });
-                FileUtils.createFile(aByteArr, aData.URL, function () {
+                FileUtils.createFile(aByteArr, aData.url, function () {
                     model.save(function () {
-                        FileUtils.changeSize(aData.URL, SmallImageDirectory + aData.name, function (Text) {
+                        FileUtils.changeSize(aData.url, SmallImageDirectory + aData.name, function (Text) {
                             callback(Text);
                         });
                     }, function (err) {
                         error(err);
-                        FileUtils.deleteFile(aData.URL, function (Text) {
+                        FileUtils.deleteFile(aData.url, function (Text) {
                             callback(Text);
                         });
                     });
@@ -64,16 +65,16 @@ define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, Modul
                     name: aData.name,
                     description: aData.description,
                     type: aData.type,
-                    URL: aData.URL
+                    url: aData.url
                 });
-                FileUtils.loadFile(anUrl, aData.URL, function () {
+                FileUtils.loadFile(anUrl, aData.url, function () {
                     model.save(function () {
-                        FileUtils.changeSize(aData.URL, SmallImageDirectory + aData.name, function (Text) {
+                        FileUtils.changeSize(aData.url, SmallImageDirectory + aData.name, function (Text) {
                             callback(Text);
                         });
                     }, function (err) {
                         error(err);
-                        FileUtils.deleteFile(aData.URL, function (Text) {
+                        FileUtils.deleteFile(aData.url, function (Text) {
                             callback(Text);
                         });
                     });
@@ -104,7 +105,11 @@ define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, Modul
         };
         
         self.getSmallImageDirectory = function(callback, error) {
-            callback(SmallImageDirectory, error);
+            callback(SmallImageDirectory);
+        };
+        
+        self.getContext = function(callback, error) {
+            callback(Context);
         };
     }
     return module_constructor;
