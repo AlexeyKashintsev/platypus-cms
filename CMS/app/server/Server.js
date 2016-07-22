@@ -4,13 +4,19 @@
  * @stateless
  * @public 
  */
-define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, ModuleName) {
+define('Server', ['orm', 'rpc', 'Settings', 'logger'], function (Orm, Rpc, Settings, Logger, ModuleName) {
     function module_constructor() {
         var self = this, model = Orm.loadModel(ModuleName)
                 , FileUtils = new Rpc.Proxy('FileUtils');
         
         var Context = Settings.Context;
         var SmallImageDirectory = Settings.SmallImageDirectory;
+//        
+//        self.sortDb = function(callback) {
+//            model.qSelect.query({}, function() {
+//                callback(model.qSelect);
+//            });
+//        };
         
         self.deleteItems = function (aData, callback, error) {
             model.qSelect.requery(function () {
@@ -18,7 +24,7 @@ define('Server', ['orm', 'rpc', 'Settings'], function (Orm, Rpc, Settings, Modul
                 for (var i = sd; i >= 0; i--) {
                     for (var s = aData.length - 1; s >= 0; s--) {
                         if (model.qSelect[i].item_id === aData[s]) {
-                            FileUtils.deleteFile(model.qSelect[i].URL);
+                            FileUtils.deleteFile(model.qSelect[i].url);
                             model.qSelect.splice(i, 1);
                             break;
                         }

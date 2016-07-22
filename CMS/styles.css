@@ -1,5 +1,10 @@
-.imageViewer {
+body{
+    margin: 0;
+}
+#imageViewer {
     display: block;
+    position: absolute;
+    z-index: -1;
 }
 .gallery {
     width:60%;
@@ -15,6 +20,8 @@
 .previewForm {
     display:inline-block;
     margin: 5%;
+    width:60px;
+    height:60px;
 }
 .originalForm {
     width: 40%;
@@ -54,3 +61,24 @@ span {
     margin-top: 1%;
     display: inline-block;
 }
+.s1 {
+    width: 60px;
+    height: 60px;
+    background-color: red;
+    position:absolute;
+}
+.checkBox {
+    position:absolute;
+    right:0px;
+    top:0px;
+    margin:0px;
+}
+.form {
+
+}
+.vv {
+    width:50%;
+    height:50%;
+    background-color: red;
+}
+

@@ -10,12 +10,15 @@
     </head>
     <body>
         <!-- built files will be auto injected -->
-
         <div id="imageViewer">
+            <div class="form" v-show="display">{{shofFrom}}</div>
             <div class="gallery">
                 <div style="padding: 1%;">Gallery:</div>
                 <div class="previewForm" v-for="image in images" track-by="$index" >
-                    <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
+                    <div class="s1">
+                        <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
+                        <check-box v-bind:url-preview="image.urlPreview" v-bind:check-box-id="image.item_id"></check-box>
+                    </div>
                 </div>
             </div>
             <div class="originalForm">
@@ -28,7 +31,12 @@
                         <span><pre>Name: </pre></span><info-name></info-name></br>
                         <span><pre>Type: </pre></span><info-type></info-type></br>
                         <span><pre>Description: </pre></span><info-description></info-description></br><textarea v-model="description"></textarea>
-                      </div>
+                        </br>
+                        <button v-on:click="onClick(1)">Load image</button>
+                        <button v-on:click="onClick(2)">Change description</button>
+                        <button @click="shofFrom=!shofFrom"">Delete image</button>
+                        {{msg}}
+                    </div>
                 </div>
             </div>
         </div>

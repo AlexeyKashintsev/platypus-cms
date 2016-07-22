@@ -1,7 +1,7 @@
 /**
  * 
  * @author admin
- * @name qSelect
+ * @name qSort
  * @public
  */
 Select *

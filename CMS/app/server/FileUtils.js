@@ -68,7 +68,9 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
         };
 
         self.deleteFile = function (aFromDirectory, callback, err) {
-            var File = new FileClass(aFromDirectory);
+            var File = new FileClass('C://Repos/platypus-cms/CMS/static' + aFromDirectory);
+            File.delete();
+            File = new FileClass('C://Repos/platypus-cms/CMS/static/small_image' + aFromDirectory);
             File.delete();
             callback('Succes!');
         };
