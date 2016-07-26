@@ -4,34 +4,29 @@
  * @stateless
  * @public 
  */
-define('Server', ['orm', 'rpc', 'Settings', 'logger'], function (Orm, Rpc, Settings, Logger, ModuleName) {
+define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], function (Orm, Settings, Logger, fileUtils, imageUtils, ModuleName) {
     function module_constructor() {
         var self = this, model = Orm.loadModel(ModuleName)
-                , FileUtils = new Rpc.Proxy('FileUtils');
-        
+                , FileUtils = new fileUtils()
+                , ImageUtils = new imageUtils();
         var Context = Settings.Context;
         var SmallImageDirectory = Settings.SmallImageDirectory;
-//        
-//        self.sortDb = function(callback) {
-//            model.qSelect.query({}, function() {
-//                callback(model.qSelect);
-//            });
-//        };
-        
+        /*
+         * @get /deleteItems
+         */
         self.deleteItems = function (aData, callback, error) {
             model.qSelect.requery(function () {
                 var sd = model.qSelect.length - 1;
                 for (var i = sd; i >= 0; i--) {
                     for (var s = aData.length - 1; s >= 0; s--) {
                         if (model.qSelect[i].item_id === aData[s]) {
-                            FileUtils.deleteFile(model.qSelect[i].url);
-                            model.qSelect.splice(i, 1);
+                            ImageUtils.deleteImage(model.qSelect[i].name, function () {
+                                model.qSelect.splice(i, 1);
+                            });
                             break;
                         }
                     }
-                    ;
                 }
-                ;
                 model.save(function () {
                     callback('Succes!');
                 }, function (err) {
@@ -40,24 +35,33 @@ define('Server', ['orm', 'rpc', 'Settings', 'logger'], function (Orm, Rpc, Setti
             });
         };
 
-        self.insertItemFromPc = function (aData, aByteArr, callback, error) {
-            model.qSelect.requery(function () {
+        /*
+         * @get /insertItem
+         */
+        self.insertItem = function (aData, callback, error) {
+            if (!error)
+                error = function (e) {
+                    Logger.severe(e);
+                };
+            var currentCount = 0;
+            aData.forEach(function (d) {
                 model.qSelect.push({
-                    name: aData.name,
-                    description: aData.description,
-                    type: aData.type,
-                    url: aData.url
+                    item_id: d.item_id,
+                    name: d.name,
+                    description: d.description,
+                    type: d.type,
+                    url: d.url
                 });
-                FileUtils.createFile(aByteArr, aData.url, function () {
-                    model.save(function () {
-                        FileUtils.changeSize(aData.url, SmallImageDirectory + aData.name, function (Text) {
-                            callback(Text);
-                        });
-                    }, function (err) {
-                        error(err);
-                        FileUtils.deleteFile(aData.url, function (Text) {
-                            callback(Text);
-                        });
+                ImageUtils.processLoadedImageFile(d.imgURL, d.name, function () {
+                    ImageUtils.changeSize(d.name, SmallImageDirectory + d.name, function (Text) {
+                        currentCount++;
+                        if (currentCount === aData.length) {
+                            model.save(function () {
+                                callback(Text);
+                            }, function (err) {
+                                error(err);
+                            });
+                        }
                     });
                 }, function (err) {
                     error(err);
@@ -65,31 +69,9 @@ define('Server', ['orm', 'rpc', 'Settings', 'logger'], function (Orm, Rpc, Setti
             });
         };
 
-        self.insertItemFromServer = function (aData, anUrl, callback, error) {
-            model.qSelect.requery(function () {
-                model.qSelect.push({
-                    name: aData.name,
-                    description: aData.description,
-                    type: aData.type,
-                    url: aData.url
-                });
-                FileUtils.loadFile(anUrl, aData.url, function () {
-                    model.save(function () {
-                        FileUtils.changeSize(aData.url, SmallImageDirectory + aData.name, function (Text) {
-                            callback(Text);
-                        });
-                    }, function (err) {
-                        error(err);
-                        FileUtils.deleteFile(aData.url, function (Text) {
-                            callback(Text);
-                        });
-                    });
-                }, function (err) {
-                    error(err);
-                });
-            });
-        };
-
+        /*
+         * @get /changeInfo
+         */
         self.changeInfo = function (anItemId, aDescription, callback, error) {
             model.qChoose.params.item_id = +anItemId;
             model.qChoose.requery(function () {
@@ -105,16 +87,25 @@ define('Server', ['orm', 'rpc', 'Settings', 'logger'], function (Orm, Rpc, Setti
                 }
             });
         };
-        
-        self.getInfo = function(callback, error) {
+
+        /*
+         * @get /getInfo
+         */
+        self.getInfo = function (callback, error) {
             model.qSelect.query({}, callback, error);
         };
-        
-        self.getSmallImageDirectory = function(callback, error) {
+
+        /*
+         * @get /getSmallImageDirectory
+         */
+        self.getSmallImageDirectory = function (callback, error) {
             callback(SmallImageDirectory);
         };
-        
-        self.getContext = function(callback, error) {
+
+        /*
+         * @get /getContext
+         */
+        self.getContext = function (callback, error) {
             callback(Context);
         };
     }

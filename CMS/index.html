@@ -11,11 +11,27 @@
     <body>
         <!-- built files will be auto injected -->
         <div id="imageViewer">
-            <div class="form" v-show="display">{{shofFrom}}</div>
+            <div class="form" v-show="display">
+                <button class="closeForm" v-on:click="changeFormState">X</button>
+                <button style="width:40%" @click="displayInputFromPc">Load from pc</button>
+                <button style="width:40%" @click="displayInputViaUrl">Load via url</button>
+                Info:
+                <div class="inputInfo">
+                    </br><span>Name: </span> <input v-model="inputName">
+                    </br><span>Type: </span> <input v-model="inputType">
+                    </br>
+                    <input class="s123412" type="file" v-show="displayload1" multiple @change="onFileChange">
+                    <input v-model="inputUrl" v-show="displayload2">
+                    </br><span>Description: </span>
+                    </br><textarea v-model="inputDescription"></textarea></br>
+                    <button  v-on:click="onClickLoadItem">Load Item</button>
+                    </br>{{errorMsg}}
+                </div>
+            </div>
             <div class="gallery">
                 <div style="padding: 1%;">Gallery:</div>
                 <div class="previewForm" v-for="image in images" track-by="$index" >
-                    <div class="s1">
+                    <div class="imageContainer">
                         <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
                         <check-box v-bind:url-preview="image.urlPreview" v-bind:check-box-id="image.item_id"></check-box>
                     </div>
@@ -23,7 +39,7 @@
             </div>
             <div class="originalForm">
                 <div class="picture">
-                    <image-original class="originImage" v-bind:url-original="currentImage.urlOriginal"></image-original>
+                    <image-original class="originImage"></image-original>
                 </div>
                 <div class="information">
                     <span>Information:</span>
@@ -32,10 +48,9 @@
                         <span><pre>Type: </pre></span><info-type></info-type></br>
                         <span><pre>Description: </pre></span><info-description></info-description></br><textarea v-model="description"></textarea>
                         </br>
-                        <button v-on:click="onClick(1)">Load image</button>
-                        <button v-on:click="onClick(2)">Change description</button>
-                        <button @click="shofFrom=!shofFrom"">Delete image</button>
-                        {{msg}}
+                        <button v-on:click="changeFormState">Load image</button>
+                        <button v-on:click="changeDescription">Change description</button>
+                        <button v-on:click="deleteItems">Delete image</button>
                     </div>
                 </div>
             </div>
