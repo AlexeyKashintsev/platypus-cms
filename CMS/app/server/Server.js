@@ -39,10 +39,6 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
          * @get /insertItem
          */
         self.insertItem = function (aData, callback, error) {
-            if (!error)
-                error = function (e) {
-                    Logger.severe(e);
-                };
             var currentCount = 0;
             aData.forEach(function (d) {
                 model.qSelect.push({

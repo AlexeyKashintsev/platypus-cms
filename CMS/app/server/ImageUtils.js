@@ -27,7 +27,7 @@ define('ImageUtils', ['resource', 'Settings', 'FileUtils'], function (Resource, 
         };
 
         self.processLoadedImageFile = function (aFromDirectory, anIntoDirectory, callback, err) {
-            var obj = Resource.load(aFromDirectory);
+            var obj = Resource.load(encodeURI(aFromDirectory));
             FileUtils.createFile(obj, anIntoDirectory, function() {});
             FileUtils.createFile(obj, SmallImageDirectory + anIntoDirectory, function() {});
             callback('Success');
@@ -38,8 +38,7 @@ define('ImageUtils', ['resource', 'Settings', 'FileUtils'], function (Resource, 
             anOutputPath = localPath + anOutputPath;
             var OurImage = ImageIo.read(new File(anInputPath));
             var newWidth, newHeight;
-            var Format = anOutputPath.match(/\.\S+/)[0];
-            Format = Format.slice(1, Format.length);
+            var Format = anOutputPath.split('.').pop();
             if (OurImage.width > OurImage.height) {
                 newWidth = SmallImageSize;
                 newHeight = (newWidth / OurImage.width) * OurImage.height;
@@ -47,7 +46,11 @@ define('ImageUtils', ['resource', 'Settings', 'FileUtils'], function (Resource, 
                 newHeight = SmallImageSize;
                 newWidth = (newHeight / OurImage.height) * OurImage.width;
             }
-            var scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+            if (Format === 'png') {
+                var scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+            } else {
+                var scaled = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+            }
             var g = scaled.createGraphics();
             g.drawImage(OurImage, 0, 0, newWidth, newHeight, null);
             g.dispose();

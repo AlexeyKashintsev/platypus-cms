@@ -17,7 +17,6 @@
                 <button style="width:40%" @click="displayInputViaUrl">Load via url</button>
                 Info:
                 <div class="inputInfo">
-                    </br><span>Name: </span> <input v-model="inputName">
                     </br><span>Type: </span> <input v-model="inputType">
                     </br>
                     <input class="s123412" type="file" v-show="displayload1" multiple @change="onFileChange">
@@ -44,9 +43,8 @@
                 <div class="information">
                     <span>Information:</span>
                     <div class="info">
-                        <span><pre>Name: </pre></span><info-name></info-name></br>
                         <span><pre>Type: </pre></span><info-type></info-type></br>
-                        <span><pre>Description: </pre></span><info-description></info-description></br><textarea v-model="description"></textarea>
+                        <span><pre>Description: </pre></span></br><textarea v-model="description"></textarea>
                         </br>
                         <button v-on:click="changeFormState">Load image</button>
                         <button v-on:click="changeDescription">Change description</button>

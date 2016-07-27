@@ -28,8 +28,11 @@ body{
 .previewForm {
     display:inline-block;
     margin: 5%;
-    width:60px;
-    height:60px;
+    position: relative;
+
+}
+.imageContainer {
+    position: relative;
 }
 .originalForm {
     width: 40%;
@@ -70,9 +73,6 @@ body{
 span {
     margin-top: 1%;
     display: inline-block;
-}
-.imageContainer {
-    position:absolute;
 }
 .checkBox {
     position:absolute;
