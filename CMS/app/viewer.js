@@ -3,7 +3,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
     var Server;
     var SmallImageDirectory;
 
-    global.loadImageFromPc = function (aFiles, ImagesArr, type, inputdescription, callback, error) {
+    global.loadImageFromPc = function (aFiles, ImagesArr, name, inputdescription, callback, error) {
         var currentCount = 0;
         var Images = new Array();
         var ImageItems = new Array();
@@ -13,41 +13,60 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 var Id = id.generate();
                 Resource.upload(data, data.name,
                         function (aUrl) {
-                            var extension = '.' + aUrl[0].split('.').pop();
-                            currentCount++;
-                            Images.push({
-                                item_id: Id,
-                                name: Id + extension,
-                                type: type,
-                                url: '/' + Id + extension,
-                                description: inputdescription,
-                                imgURL: aUrl[0]
-                            });
-                            ImageItems.push({
-                                item_id: Id,
-                                name: Id + extension,
-                                description: inputdescription,
-                                type: type,
-                                urlOriginal: '/' + Id + extension,
-                                urlPreview: SmallImageDirectory + Id + extension
-                            });
-                            if (currentCount === aFiles.length) {
-                                Server.insertItem(Images, function () {
-                                    ImageItems.forEach(function (anItem) {
-                                        ImagesArr.push({
-                                            item_id: anItem.item_id,
-                                            name: anItem.name,
-                                            description: anItem.description,
-                                            type: anItem.type,
-                                            urlOriginal: anItem.urlOriginal,
-                                            urlPreview: anItem.urlPreview
-                                        });
-                                    });
-                                    callback('Succes');
-                                }, function (err) {
-                                    error(err);
-                                });
+                            var Name;
+                            if (name === '') {
+                                Name = data.name;
+                            } else {
+                                Name = name;
                             }
+                            var extension = '.' + aUrl[0].split('.').pop();
+                            var promiseGetType = new Promise(function (Resolve, Reject) {
+                                Server.getType(extension, Resolve, Reject);
+                            });
+                            promiseGetType.then(function (result) {
+                                currentCount++;
+                                Images.push({
+                                    item_id: Id,
+                                    name: Name,
+                                    type: result[0].type,
+                                    url: '/' + Id + extension,
+                                    description: inputdescription,
+                                    imgURL: aUrl[0]
+                                });
+                                ImageItems.push({
+                                    item_id: Id,
+                                    name: Name,
+                                    description: inputdescription,
+                                    type: result[0].type,
+                                    urlOriginal: '/' + Id + extension,
+                                    urlPreview: SmallImageDirectory + Id + extension
+                                });
+                                if (currentCount === aFiles.length) {
+                                    Server.insertItem(Images, extension, function () {
+                                        ImageItems.forEach(function (anItem) {
+                                            ImagesArr.push({
+                                                item_id: anItem.item_id,
+                                                name: anItem.name,
+                                                description: anItem.description,
+                                                type: anItem.type,
+                                                urlOriginal: anItem.urlOriginal,
+                                                urlPreview: anItem.urlPreview
+                                            });
+                                        });
+                                        Images.forEach(function (anImages) {
+                                            Server.deleteTempFile(anImages.imgURL, function () {
+                                                callback('succes');
+                                            }, function (err) {
+                                                error('Delete local files failed: ' + err);
+                                            });
+                                        });
+                                    }, function (err) {
+                                        error(err);
+                                    });
+                                }
+                            }, function (err) {
+                                console.log('Identify type failed: ' + data.name);
+                            });
                         },
                         function (aEvent) {
                         },
@@ -59,30 +78,38 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
         }
     };
 
-    global.loadImageViaUrl = function (Url, ImagesArr, type, inputdescription, calback, error) {
+    global.loadImageViaUrl = function (Url, ImagesArr, name, inputdescription, calback, error) {
         var Id = id.generate();
         var extension = '.' + Url.split('.').pop();
-        var Image = new Array();
-        Image.push({
-            item_id: Id,
-            name: Id + extension,
-            type: type,
-            url: '/' + Id + extension,
-            description: inputdescription,
-            imgURL: Url
-        });
-        Server.insertItem(Image, function () {
-            ImagesArr.push({
+        Server.getType(extension, function (Types) {
+            var Name;
+            if (name === '') {
+                Name = Url.split('/').pop();
+            } else {
+                Name = name;
+            }
+            var Image = new Array();
+            Image.push({
                 item_id: Id,
-                name: Id + extension,
+                name: Name,
+                type: Types[0].type,
+                url: '/' + Id + extension,
                 description: inputdescription,
-                type: type,
-                urlOriginal: '/' + Id + extension,
-                urlPreview: SmallImageDirectory + Id + extension
+                imgURL: Url
             });
-            calback('Succes');
-        }, function (err) {
-            error(err);
+            Server.insertItem(Image, extension, function () {
+                ImagesArr.push({
+                    item_id: Id,
+                    name: Name,
+                    description: inputdescription,
+                    type: Types[0].type,
+                    urlOriginal: '/' + Id + extension,
+                    urlPreview: SmallImageDirectory + Id + extension
+                });
+                calback('succes');
+            }, function (err) {
+                error(err);
+            });
         });
     };
 
@@ -110,9 +137,8 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 currentChecked: [],
                 display: false,
                 errorMsg: '',
-                inputType: '',
+                inputName: '',
                 inputDescription: '',
-                inputurl: '',
                 displayload1: true,
                 displayload2: false,
                 files: [],
@@ -130,16 +156,16 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     Server.getInfo(function (Data) {
                         ImagesArr.splice(0, ImagesArr.length);
                         for (i = 0; i < Data.length; i++) {
+                            var extension = '.' + Data[i].url.split('.').pop();
                             ImagesArr.push({
                                 item_id: Data[i].item_id,
                                 name: Data[i].name,
                                 description: Data[i].description,
                                 type: Data[i].type,
                                 urlOriginal: Data[i].url,
-                                urlPreview: SmallImageDirectory + Data[i].name
+                                urlPreview: SmallImageDirectory + Data[i].item_id + extension
                             });
                         }
-                        ;
                     });
                     return ImagesArr;
                 },
@@ -151,52 +177,106 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     this.errorMsg = '';
                 },
                 changeDescription: function () {
-                    Server.changeInfo(this.item_id, this.description, function () {});
-                    for (var i = 0, length = this.images.length; i < length; i++) {
-                        if (this.images[i].item_id === this.item_id) {
-                            this.images[i].description = this.description;
+                    var self = this;
+                    if (this.currentImageId === '') {
+                        alert('Error');
+                    } else {
+                        Server.changeInfo(this.currentImageId, this.description, function () {
+                            for (var i = 0, length = self.images.length; i < length; i++) {
+                                if (self.images[i].item_id === self.item_id) {
+                                    self.images[i].description = self.description;
+                                }
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                },
+                changeName: function () {
+                    var self = this;
+                    if (this.currentImageId === '') {
+                        alert('Error');
+                    } else {
+                        var name = prompt('Input name');
+                        if (name) {
+                            Server.changeName(this.currentImageId, name, function (res) {
+                                for (var i = 0, length = self.images.length; i < length; i++) {
+                                    if (self.images[i].item_id === self.item_id) {
+                                        self.images[i].name = name;
+                                        self.$broadcast('clickOnPreview', self.images[i]);
+                                    }
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
                         }
                     }
                 },
-                deleteItems: function () {
-                    var currentChecked = this.currentChecked;
-                    var ImagesArr = this.images;
-                    Server.deleteItems(this.currentChecked, function () {
-                        currentChecked.forEach(function (Data) {
-                            for (var i = ImagesArr.length - 1; i >= 0; i--) {
-                                if (ImagesArr[i].item_id === Data) {
-                                    ImagesArr.splice(i, 1);
+                deleteCurrentItem: function () {
+                    var self = this;
+                    if (self.currentImageId !== '') {
+                        Server.deleteImage([this.currentImageId], function () {
+                            self.$dispatch('clearOriginalForm');
+                            for (var i = self.images.length - 1; i >= 0; i--) {
+                                if (self.images[i].item_id === self.currentImageId) {
+                                    self.images.splice(i, 1);
+                                    self.currentImageId = '';
+                                    break;
                                 }
                             }
                         });
-                        currentChecked.splice(0, currentChecked.length);
+                    }
+                },
+                deleteItems: function () {
+                    var self = this;
+                    var status = false;
+                    Server.deleteImage(self.currentChecked, function () {
+                        (new Promise(function (res, err) {
+                            self.currentChecked.forEach(function (Data) {
+                                if (Data === self.currentImageId) {
+                                    self.$dispatch('clearOriginalForm');
+                                    status = true;
+                                }
+                                for (var i = self.images.length - 1; i >= 0; i--) {
+                                    if (self.images[i].item_id === Data) {
+                                        self.images.splice(i, 1);
+                                    }
+                                }
+                            });
+                            res('true');
+                        })).then(function (res) {
+                            if (!status) {
+                                for (var i = self.images.length - 1; i >= 0; i--) {
+                                    if (self.images[i].item_id === self.currentImageId) {
+                                        self.$broadcast('clickOnPreview', self.images[i]);
+                                    }
+                                }
+                            }
+                            self.currentChecked.splice(0, self.currentChecked.length);
+                        }, function (err) {});
+
                     });
                     this.$dispatch('clickOnDeleteButton');
-                    this.images = ImagesArr;
                 },
                 onClickLoadItem: function () {
-                    if (this.inputType === '' || this.inputDescription === '') {
-                        this.errorMsg = 'Not all fields allowed!';
+                    var self = this;
+                    this.errorMsg = 'Loading';
+                    if (this.displayload1) {
+                        (new Promise(function (Resolve, Reject) {
+                            global.loadImageFromPc(self.files, self.images, self.inputName, self.inputDescription, Resolve, Reject);
+                        })).then(function (res) {
+                            self.errorMsg = 'Loading ' + res;
+                        }, function (err) {
+                            self.errorMsg = 'Loading failed: ' + err;
+                        });
                     } else {
-                        var self = this;
-                        this.errorMsg = 'Loading';
-                        if (this.displayload1) {
-                            (new Promise(function (Resolve, Reject) {
-                                global.loadImageFromPc(self.files, self.images, self.inputType, self.inputDescription, Resolve, Reject);
-                            })).then(function (res) {
-                                self.errorMsg = 'Loading ' + res;
-                            }, function (err) {
-                                self.errorMsg = 'Loading failed: ' + err;
-                            });
-                        } else {
-                            (new Promise(function (Resolve, Reject) {
-                                global.loadImageViaUrl(self.inputUrl, self.images, self.inputType, self.inputDescription, Resolve, Reject);
-                            })).then(function (res) {
-                                self.errorMsg = 'Loading ' + res;
-                            }, function (err) {
-                                self.errorMsg = 'Loading failed: ' + err;
-                            });
-                        }
+                        (new Promise(function (Resolve, Reject) {
+                            global.loadImageViaUrl(self.inputUrl, self.images, self.inputName, self.inputDescription, Resolve, Reject);
+                        })).then(function (res) {
+                            self.errorMsg = 'Loading ' + res;
+                        }, function (err) {
+                            self.errorMsg = 'Loading failed: ' + err;
+                        });
                     }
                 },
                 displayInputFromPc: function () {
@@ -236,17 +316,27 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 },
                 'clickOnDeleteButton': function () {
                     this.$broadcast('clickOnDelete');
+                },
+                'clearOriginalForm': function () {
+                    this.$broadcast('clickOnPreview', {
+                        item_id: '',
+                        name: '',
+                        description: '',
+                        type: '',
+                        urlOriginal: '',
+                        urlPreview: ''
+                    });
+                    this.description = '';
                 }
-
             },
             components: {
                 'imagePreview': {
                     template: '<img v-bind:src="urlPreview" v-on:click="loadOriginal" :style="MyStyle">',
                     props: ['urlPreview', 'MyStyle'],
-                    ready: function() {
-                            this.MyStyle = {
-                                    border: "5px solid white"
-                                };
+                    ready: function () {
+                        this.MyStyle = {
+                            border: "5px solid #dcdcdc"
+                        };
                     },
                     methods: {
                         loadOriginal: function (e) {
@@ -261,7 +351,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 };
                             } else {
                                 this.MyStyle = {
-                                    border: "5px solid white"
+                                    border: "5px solid #dcdcdc"
                                 };
                             }
                         }
@@ -273,6 +363,15 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     events: {
                         'clickOnPreview': function (data) {
                             this.urlOriginal = data.urlOriginal;
+                        }
+                    }
+                },
+                'infoName': {
+                    template: '{{name}}',
+                    props: ['name'],
+                    events: {
+                        'clickOnPreview': function (data) {
+                            this.name = data.name;
                         }
                     }
                 },
@@ -305,7 +404,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         'ctrlClickOnPreview': function (imgId) {
                             if (imgId === this.checkBoxId) {
                                 this.checkBox = !this.checkBox;
-                                this.$dispatch('clickOnPreviewCheckBox', this.checkBoxId, !this.checkBox);
+                                this.$dispatch('clickOnPreviewCheckBox', this.checkBoxId, this.checkBox);
                             }
                         }
                     }

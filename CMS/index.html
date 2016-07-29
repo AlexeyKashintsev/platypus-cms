@@ -12,23 +12,50 @@
         <!-- built files will be auto injected -->
         <div id="imageViewer">
             <div class="form" v-show="display">
-                <button class="closeForm" v-on:click="changeFormState">X</button>
-                <button style="width:40%" @click="displayInputFromPc">Load from pc</button>
-                <button style="width:40%" @click="displayInputViaUrl">Load via url</button>
-                Info:
+                <div class="formButtons" style="margin:2%;">
+                    <button class="topButtons" style="width:30%; margin-right: 20%;" @click="displayInputFromPc">Load from pc</button>
+                    <button class="topButtons" style="width:30%" @click="displayInputViaUrl">Load via url</button>
+                </div>
                 <div class="inputInfo">
-                    </br><span>Type: </span> <input v-model="inputType">
-                    </br>
                     <input class="s123412" type="file" v-show="displayload1" multiple @change="onFileChange">
-                    <input v-model="inputUrl" v-show="displayload2">
-                    </br><span>Description: </span>
-                    </br><textarea v-model="inputDescription"></textarea></br>
-                    <button  v-on:click="onClickLoadItem">Load Item</button>
+                    <table style="margin:1% auto; width: 60%;">
+                        <tr>
+                            <td>
+                                <span v-show="displayload2">Url: </span>
+                            </td>
+                            <td>
+                                <input style="width: 100%" v-model="inputUrl" v-show="displayload2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">
+                                <span>Name: </span>
+                            </td>
+                            <td>
+                                <input style="width: 100%" v-model="inputName">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top; text-align: right;">
+                                <span>Description: </span>
+                            </td>
+                            <td>
+                                <textarea style="width: 100%; resize:none;" v-model="inputDescription"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                    <button style="margin-right: 15%; width: 15%;" v-on:click="changeFormState">Cancel</button>
+                    <button style="width: 15%;" v-on:click="onClickLoadItem">Load Item</button>
                     </br>{{errorMsg}}
                 </div>
             </div>
             <div class="gallery">
                 <div style="padding: 1%;">Gallery:</div>
+                <div style="padding-top: 1%; width:100%;">
+                    <button v-on:click="changeFormState" style="margin-right:25%;">Load image</button>
+                    <button v-if="! currentChecked.length" disabled v-on:click="deleteItems">Delete image</button>
+                    <button v-else v-on:click="deleteItems">Delete image</button>
+                </div>
                 <div class="previewForm" v-for="image in images" track-by="$index" >
                     <div class="imageContainer">
                         <image-preview v-bind:url-preview="image.urlPreview"></image-preview>
@@ -43,12 +70,18 @@
                 <div class="information">
                     <span>Information:</span>
                     <div class="info">
+                        <span><pre>Name: </pre></span><info-name></info-name></br>
                         <span><pre>Type: </pre></span><info-type></info-type></br>
-                        <span><pre>Description: </pre></span></br><textarea v-model="description"></textarea>
+                        <span><pre>Description: </pre></span></br>
+                        <div style="width:100%; text-align: center;">
+                            <textarea v-model="description" style="resize:vertical; width: 98%; height:100px;"></textarea>
+                        </div>
                         </br>
-                        <button v-on:click="changeFormState">Load image</button>
-                        <button v-on:click="changeDescription">Change description</button>
-                        <button v-on:click="deleteItems">Delete image</button>
+                        <div class="originImageButtons">
+                            <button v-on:click="changeDescription">Change description</button>
+                            <button v-on:click="changeName">Change name</button>
+                            <button v-on:click="deleteCurrentItem" style="position:absolute; right:5%;">Delete image</button>
+                        </div>
                     </div>
                 </div>
             </div>

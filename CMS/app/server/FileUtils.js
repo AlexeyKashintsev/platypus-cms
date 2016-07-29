@@ -12,6 +12,7 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
                 File = Java.type("java.io.File"),
                 FileOutputStream = Java.type('java.io.FileOutputStream');
         var localPath = Settings.localPath;
+        var localTempPath = Settings.localTempPath;
         
         /*
          * @get /createFile
@@ -46,6 +47,16 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
          */
         self.deleteFile = function (aFromDirectory, callback, err) {
             var file = new File(localPath + aFromDirectory);
+            file.delete();
+            callback('Succes!');
+        };
+        
+        /*
+         * @get /deleteTempFile
+         */
+        self.deleteTempFile = function(aFromDirectory, callback, error) {
+            aFromDirectory = aFromDirectory.split('/').pop();
+            var file = new File(localTempPath + aFromDirectory);
             file.delete();
             callback('Succes!');
         };

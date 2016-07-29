@@ -10,5 +10,6 @@ define('Settings', [], function () {
         Object.defineProperty(Settings, 'SmallImageSize', {value: 60});
         Object.defineProperty(Settings, 'Context', {value: '/cms'});
         Object.defineProperty(Settings, 'localPath', {value: '/Repos/platypus-cms/CMS/static/'});
+        Object.defineProperty(Settings, 'localTempPath', {value: '/Repos/platypus-cms/CMS/pub/'});
     return Settings;
 });

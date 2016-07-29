@@ -12,15 +12,16 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
         var Context = Settings.Context;
         var SmallImageDirectory = Settings.SmallImageDirectory;
         /*
-         * @get /deleteItems
+         * @get /deleteImage
          */
-        self.deleteItems = function (aData, callback, error) {
+        self.deleteImage = function (aData, callback, error) {
             model.qSelect.requery(function () {
                 var sd = model.qSelect.length - 1;
                 for (var i = sd; i >= 0; i--) {
                     for (var s = aData.length - 1; s >= 0; s--) {
                         if (model.qSelect[i].item_id === aData[s]) {
-                            ImageUtils.deleteImage(model.qSelect[i].name, function () {
+                            var extension = '.' + model.qSelect[i].url.split('.').pop();
+                            ImageUtils.deleteImage(model.qSelect[i].item_id + extension, function () {
                                 model.qSelect.splice(i, 1);
                             });
                             break;
@@ -36,9 +37,16 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
         };
 
         /*
+         * @get /deleteTempFile
+         */
+        self.deleteTempFile = function (anUrl, callback, error) {
+            FileUtils.deleteTempFile(anUrl, callback, error);
+        };
+
+        /*
          * @get /insertItem
          */
-        self.insertItem = function (aData, callback, error) {
+        self.insertItem = function (aData, extension, callback, error) {
             var currentCount = 0;
             aData.forEach(function (d) {
                 model.qSelect.push({
@@ -48,8 +56,8 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
                     type: d.type,
                     url: d.url
                 });
-                ImageUtils.processLoadedImageFile(d.imgURL, d.name, function () {
-                    ImageUtils.changeSize(d.name, SmallImageDirectory + d.name, function (Text) {
+                ImageUtils.processLoadedImageFile(d.imgURL, d.item_id + extension, function () {
+                    ImageUtils.changeSize(d.item_id + extension, SmallImageDirectory + d.item_id + extension, function (Text) {
                         currentCount++;
                         if (currentCount === aData.length) {
                             model.save(function () {
@@ -79,7 +87,26 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
                         error(err);
                     });
                 } else {
-                    error('File not found1');
+                    error('File not found!');
+                }
+            });
+        };
+
+        /*
+         * @get /changeName
+         */
+        self.changeName = function (anItemId, aName, callback, error) {
+            model.qChoose.params.item_id = +anItemId;
+            model.qChoose.requery(function () {
+                if (model.qChoose.length) {
+                    model.qChoose[0].name = aName;
+                    model.save(function () {
+                        callback('Succes!');
+                    }, function (err) {
+                        error(err);
+                    });
+                } else {
+                    error('File not found!');
                 }
             });
         };
@@ -103,6 +130,14 @@ define('MyServer', ['orm', 'Settings', 'logger', 'FileUtils', 'ImageUtils'], fun
          */
         self.getContext = function (callback, error) {
             callback(Context);
+        };
+
+        /*
+         * @get /getType
+         */
+        self.getType = function (anExtension, callback, error) {
+            model.qGetType.params.extension = anExtension;
+            model.qGetType.query({}, callback, error);
         };
     }
     return module_constructor;

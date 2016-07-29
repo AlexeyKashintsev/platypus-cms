@@ -6,4 +6,3 @@
  */
 Select *
 from item t
-order by name

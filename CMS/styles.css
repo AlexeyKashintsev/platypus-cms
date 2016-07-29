@@ -14,16 +14,17 @@ body{
     overflow: auto;  
 }
 .gallery {
-    width:60%;
-    height: 100%;
+    width:59%;
+    height: 97%;
     display:block;
-/*    background-color: red;*/
     position: fixed;
     left: 0px;
     top: 0px;
     text-align:center;
-    overflow-y: scroll;
-/*    border: 4px solid black;*/
+    overflow: auto;
+    background-color: #dcdcdc;
+    margin-left: 1%;
+    margin-top: 1%;
 }
 .previewForm {
     display:inline-block;
@@ -35,14 +36,15 @@ body{
     position: relative;
 }
 .originalForm {
-    width: 40%;
-    height: 100%;
-/*    background-color:green;*/
+    width: 38%;
+    height: 97%;
     display:block;
     position: fixed;
     top: 0px;
     left:60%;
-/*    border: 4px solid black;*/
+    margin-left: 1%;
+    margin-top: 1%;
+    /*    border: 4px solid black;*/
 }
 .originImage {
     display: block;
@@ -53,25 +55,31 @@ body{
 .picture {
     width:100%;
     height:40%;
-/*    background-color: yellow;*/
+    background-color: #dcdcdc;
     display: flex;
     top:0px;
     left:0px;
     align-items: center;
     justify-content: center; 
     overflow: auto;  
-    border-bottom: 4px solid black;
+    margin-bottom: 2%;
 }
 .information {
     text-align: center;
+    height:59%;
+    background-color: #dcdcdc;
+    overflow: auto;
+    position: absolute;
+    bottom: 0px;
+    width:100%;
 }
 .info {
-    width:100%;
+    width:90%;
     text-align: left;
     margin:1% 5%;
 }
 span {
-    margin-top: 1%;
+    margin-bottom: 0%;
     display: inline-block;
 }
 .checkBox {
@@ -82,10 +90,13 @@ span {
 }
 .form {
     width: 50%;
-    height: 50%;
+    height: 40%;
     background-color: white;
     z-index: 1;
     text-align: center;
+    background-color: #b8b8b8;
+    box-shadow: 0 0 50px 5px;
+    border-radius: 20px;
 }
 .closeForm {
     position: fixed;
@@ -94,6 +105,26 @@ span {
 }
 .inputInfo {
     text-align:center;
-    margin: 5%;
+    margin: 5% auto;
     margin-top: 0px;
+    width: 100%;
+    text-align: center;
+}
+.originImageButtons {
+    width: 90%;
+}
+.topButtons {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+/*    background-color: gray;*/
+      text-decoration: none; /* убирать подчёркивание у ссылок */
+/*  user-select: none;  убирать выделение текста */
+}
+.inputInfo button {
+  color: #fff; /* цвет текста */
+  text-decoration: none; /* убирать подчёркивание у ссылок */
+  background: #a0a0a0; /* фон кнопки */
+  padding: .7em 1.5em; /* отступ от текста */
+  outline: none; /* убирать контур в Mozilla */
+  border-radius: 20px;
+  min-width: 190px;
 }
