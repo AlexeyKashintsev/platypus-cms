@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><datamodel datasource="jdbc:postgresql://party-ples.ru:5432/cms_dev [remotedev на public]">
-  <parameters>
-    <parameter description="" name="extension" nullable="true" parameterMode="1" selectionForm="null" type="String"/>
-  </parameters>
-  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
-  <entity Title="" entityHeight="200" entityIconified="false" entityId="146969142802400" entityLocationX="170" entityLocationY="120" entityWidth="150" tableAlias="t" tableName="type" tableSchemaName=""/>
-  <relation leftEntityId="-1" leftEntityParameterName="extension" rightEntityFieldName="extension" rightEntityId="146969142802400"/>
-</datamodel>

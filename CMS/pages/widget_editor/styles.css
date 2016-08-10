@@ -1,0 +1,159 @@
+.body {
+	font-size: 0.7em;
+}
+a {
+	text-decoration: none;
+	color: gray;
+}
+button {
+	color: #fff; /* цвет текста */
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+	user-select: none; /* убирать выделение текста */
+	background: #c3bfbf; /* фон кнопки */
+	outline: none; /* убирать контур в Mozilla */
+	shadow: none;
+}
+.buttons a.knopka {
+	color: black; /* цвет текста */
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+	user-select: none; /* убирать выделение текста */
+	background: rgb(167, 161, 161); /* фон кнопки */
+	outline: none; /* убирать контур в Mozilla */
+	padding: .1em .7em; /* отступ от текста */
+	border-radius: 70px;
+	margin: 2%;
+	margin-right: 4%;
+	font-size: inherit;
+	display: inline-block;
+} 
+.buttons  a.knopka:hover { background: gray; } /* при наведении курсора мышки */
+.buttons  a.knopka:active { background: gray; } /* при нажатии */
+textarea {
+	margin-left: 4%;
+	width: 92%;
+	resize: none;
+	margin-top:3px;
+	display: block;
+	height: 500px; 
+}
+@media screen and (max-height: 956px) {
+	textarea {height: 345px;}
+}
+@media screen and (max-height: 660px) {
+	textarea {height: 150px;}
+}
+@media screen and (max-height: 500px) {
+	textarea {height: 100px;}
+}
+.clearfix:after{
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.menu_block_item {
+	margin: 1%;
+	margin-left:5%;
+	margin-right:5%;
+	padding: 0px;
+	text-align: center;
+	align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.menu_item {
+	display: inline-block;
+	width: 26%;
+	margin: 3%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	/*border: 2px solid black;*/
+	font-size: 25px;
+	color: gray;
+}
+.menu_item a:hover {
+	color: black;
+	/* font-weight: bold; */
+}
+
+.page_list {
+	/* display: inline-block; */
+	margin: 1%;
+	margin-right: 0px;
+	float: left;
+	margin-left:2%;
+	padding: 0px;
+	width: 30%;
+	margin-top: 2%;
+}
+.page_item {
+	display: block;
+	font-size: 25px;
+	margin: 3%;
+	background-color: #F5F5F5;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	margin-top: 0%;
+/* 	text-align: center; */
+/* 	border-radius:10px;
+	border: 1px solid gray; */
+}
+.page_item a{
+	color: black;
+}
+.page_item:hover {
+	color: black;
+	/* font-weight: bold; */
+	background-color: gray;
+}
+
+
+.data_container {
+	/* display: inline-block; */
+	float: right;
+	width: 66%;
+	margin-top: 2%;
+	margin-right: 2%;
+	background-color: #F5F5F5;
+}
+.data_inf {
+	margin: 4%;
+	margin-top:2%;
+	display: block;
+	margin-bottom: 0px;
+	font-size: 20px;
+}
+.buttons {
+	text-align: right;
+	font-size: 18px;
+}
+
+@media screen and (max-width: 956px) {
+	.menu_item { font-size: 23px; }
+	.page_item { font-size: 25px; }
+}
+@media screen and (max-width: 902px) {
+	.menu_item { font-size: 22px; }
+	.page_item { font-size: 25px; }
+}
+@media screen and (max-width: 843px) {
+	.menu_item { font-size: 17px; }
+	.page_item { font-size: 25px; }
+}
+@media screen and (max-width: 655px) {
+	.menu_item { font-size: 21px; }
+	.page_item { font-size: 20px; }
+	.buttons     { font-size: 15px; }
+}
+@media screen and (max-width: 400px) {
+	.menu_item { font-size: 15px; }
+	.page_item { font-size: 15px; }
+	.data_inf   { font-size: 15px; }
+	.buttons     { font-size: 11px; }
+}
+@media screen and (max-width: 250px) {
+	.menu_item { font-size: 10px; }
+	.page_item { font-size: 10px; }
+	.data_inf   { font-size: 10px; }
+	.buttons     { font-size: 10px; }
+}

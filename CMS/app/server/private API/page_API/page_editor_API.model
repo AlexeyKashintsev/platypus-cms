@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <entity Name="qGetPages" Title="" entityHeight="200" entityIconified="false" entityId="147003702002400" entityLocationX="0" entityLocationY="0" entityWidth="150" queryId="qGetPages" tableName="" tableSchemaName=""/>
+  <entity Name="qGetTemplateWidgets" Title="" entityHeight="200" entityIconified="false" entityId="147039807306500" entityLocationX="631" entityLocationY="70" entityWidth="170" queryId="qGetTemplateWidgets" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPageInfoViaId" Title="" entityHeight="200" entityIconified="false" entityId="147004419474800" entityLocationX="267" entityLocationY="257" entityWidth="238" queryId="qGetPageInfoViaId" tableName="" tableSchemaName=""/>
+  <entity Name="qGetRootTemplateTemplate" Title="" entityHeight="200" entityIconified="false" entityId="147064414429400" entityLocationX="65" entityLocationY="431" entityWidth="395" queryId="qGetRootTemplateTemplate" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPagesTemplateInfo" Title="" entityHeight="200" entityIconified="false" entityId="147003876524300" entityLocationX="319" entityLocationY="9" entityWidth="251" queryId="qGetPagesTemplateInfo" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPagesMetaInfo" Title="" entityHeight="200" entityIconified="false" entityId="147005042101000" entityLocationX="49" entityLocationY="215" entityWidth="150" queryId="qGetPagesMetaInfo" tableName="" tableSchemaName=""/>
+  <entity Name="qGetTemplateWidgetList" Title="" entityHeight="200" entityIconified="false" entityId="147064169900500" entityLocationX="607" entityLocationY="372" entityWidth="150" queryId="qGetTemplateWidgetList" tableName="" tableSchemaName=""/>
+  <referenceRelation leftEntityFieldName="page_id" leftEntityId="147005042101000" rightEntityFieldName="page_id" rightEntityId="147003702002400"/>
+  <referenceRelation leftEntityFieldName="template_id" leftEntityId="147064169900500" rightEntityFieldName="template_id" rightEntityId="147003876524300"/>
+  <referenceRelation leftEntityFieldName="page_id" leftEntityId="147005042101000" rightEntityFieldName="page_id" rightEntityId="147003876524300"/>
+  <referenceRelation leftEntityFieldName="page_id" leftEntityId="147005042101000" rightEntityFieldName="page_id" rightEntityId="147004419474800"/>
+  <referenceRelation leftEntityFieldName="root_template_id" leftEntityId="147064414429400" rightEntityFieldName="root_template_id" rightEntityId="147064414429400"/>
+  <referenceRelation leftEntityFieldName="template_id" leftEntityId="147003702002400" rightEntityFieldName="template_id" rightEntityId="147003876524300"/>
+  <referenceRelation leftEntityFieldName="template_id" leftEntityId="147004419474800" rightEntityFieldName="template_id" rightEntityId="147003876524300"/>
+  <referenceRelation leftEntityFieldName="root_template" leftEntityId="147003876524300" rightEntityFieldName="template_id" rightEntityId="147003876524300"/>
+  <referenceRelation leftEntityFieldName="widget_id" leftEntityId="147064169900500" rightEntityFieldName="widget_id" rightEntityId="147064169900500"/>
+</datamodel>

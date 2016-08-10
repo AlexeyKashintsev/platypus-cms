@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <entity Name="qGetPagesTemplateInfo" Title="" entityHeight="200" entityIconified="false" entityId="147022890702600" entityLocationX="400" entityLocationY="24" entityWidth="150" queryId="qGetPagesTemplateInfo" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPages" Title="" entityHeight="200" entityIconified="false" entityId="147039775950000" entityLocationX="171" entityLocationY="290" entityWidth="150" queryId="qGetPages" tableName="" tableSchemaName=""/>
+  <entity Name="qGetTemplateWidgets" Title="" entityHeight="200" entityIconified="false" entityId="147039007951700" entityLocationX="189" entityLocationY="40" entityWidth="150" queryId="qGetTemplateWidgets" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPageWidgets" Title="" entityHeight="200" entityIconified="false" entityId="147038153757100" entityLocationX="612" entityLocationY="49" entityWidth="150" queryId="qGetPageWidgets" tableName="" tableSchemaName=""/>
+  <entity Name="qGetPagesMetaInfo" Title="" entityHeight="200" entityIconified="false" entityId="147022824354800" entityLocationX="0" entityLocationY="0" entityWidth="150" queryId="qGetPagesMetaInfo" tableName="" tableSchemaName=""/>
+  <referenceRelation leftEntityFieldName="template_id" leftEntityId="147039775950000" rightEntityFieldName="template_id" rightEntityId="147022890702600"/>
+  <referenceRelation leftEntityFieldName="page_id" leftEntityId="147022824354800" rightEntityFieldName="page_id" rightEntityId="147039775950000"/>
+</datamodel>

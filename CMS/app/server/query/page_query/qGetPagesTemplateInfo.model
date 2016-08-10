@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aPageId" nullable="true" parameterMode="1" selectionForm="null" type="Number"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147022899363600" entityLocationX="707" entityLocationY="98" entityWidth="150" tableAlias="t2" tableName="template" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147003774060001" entityLocationX="507" entityLocationY="99" entityWidth="150" tableAlias="t1" tableName="template" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147003774060000" entityLocationX="258" entityLocationY="73" entityWidth="150" tableAlias="t" tableName="page" tableSchemaName=""/>
+  <relation leftEntityFieldName="aPageId" leftEntityId="-1" rightEntityFieldName="page_id" rightEntityId="147003774060000"/>
+  <relation leftEntityFieldName="template_id" leftEntityId="147003774060001" rightEntityFieldName="root_template" rightEntityId="147022899363600"/>
+  <relation leftEntityFieldName="template_id" leftEntityId="147003774060000" rightEntityFieldName="template_id" rightEntityId="147003774060001"/>
+</datamodel>

@@ -1,10 +1,9 @@
 /**
- * 
  * @author sa
  * @stateless
  * @public 
  */
-define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, ModuleName) {
+define('FileUtils', ['Settings'], function (Settings, ModuleName) {
     function module_constructor() {
         var self = this,
                 Files = Java.type('java.nio.file.Files'),
@@ -13,16 +12,25 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
                 FileOutputStream = Java.type('java.io.FileOutputStream');
         var localPath = Settings.localPath;
         var localTempPath = Settings.localTempPath;
-        
+
         /*
-         * @get /createFile
+         * @get /createImageFile
          */
-        self.createFile = function (aByteArr, anIntoDirectory, callback, err) {
+        self.createImageFile = function (aByteArr, anIntoDirectory, callback, err) {
             var path = new File(localPath + anIntoDirectory);
             path.createNewFile();
             var fileOut = new FileOutputStream(path);
             fileOut.write(aByteArr);
             fileOut.close();
+            callback('Succes!');
+        };
+
+        /*
+         * @get /createFile
+         */
+        self.createFile = function (anIntoDirectory, callback, err) {
+            var path = new File(anIntoDirectory);
+            path.createNewFile();
             callback('Succes!');
         };
 
@@ -33,7 +41,7 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
             Files.copy(Paths.get(aFromDirectory), Paths.get(anIntoDirectory));
             callback('Succes!');
         };
-        
+
         /*
          * @get /renameFile
          */
@@ -50,11 +58,11 @@ define('FileUtils', ['resource', 'Settings'], function (Resource, Settings, Modu
             file.delete();
             callback('Succes!');
         };
-        
+
         /*
          * @get /deleteTempFile
          */
-        self.deleteTempFile = function(aFromDirectory, callback, error) {
+        self.deleteTempFile = function (aFromDirectory, callback, error) {
             aFromDirectory = aFromDirectory.split('/').pop();
             var file = new File(localTempPath + aFromDirectory);
             file.delete();

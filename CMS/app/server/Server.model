@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><datamodel>
-  <entity Name="qGetType" Title="" entityHeight="200" entityIconified="false" entityId="146969143953200" entityLocationX="508" entityLocationY="205" entityWidth="150" queryId="qGetType" tableName="" tableSchemaName=""/>
-  <entity Name="qSelect" Title="" entityHeight="200" entityIconified="false" entityId="146899776805100" entityLocationX="66" entityLocationY="30" entityWidth="150" queryId="qSelect" tableName="" tableSchemaName=""/>
-  <entity Name="qChoose" Title="" entityHeight="200" entityIconified="false" entityId="146899793697600" entityLocationX="306" entityLocationY="35" entityWidth="150" queryId="qChoose" tableName="" tableSchemaName=""/>
-</datamodel>

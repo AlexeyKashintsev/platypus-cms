@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel datasource="null">
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147003459515500" entityLocationX="10" entityLocationY="20" entityWidth="150" tableName="translate"/>
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147003460021000" entityLocationX="278" entityLocationY="264" entityWidth="150" tableName="lang_list"/>
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147003461959400" entityLocationX="414" entityLocationY="27" entityWidth="150" tableName="structure"/>
+</datamodel>

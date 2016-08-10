@@ -1,0 +1,22 @@
+.menu_block_item {
+	width: 100%;
+	background-color: red;
+}
+.menu_item {
+	display: inline;
+	
+}
+.s1 {
+	font-size: 40px;
+	margin: 0px;
+}
+   ul.hr {
+    margin: 0; /* Обнуляем значение отступов */
+    padding: 4px; /* Значение полей */
+   }
+   ul.hr li {
+    display: inline; /* Отображать как строчный элемент */
+    margin-right: 5px; /* Отступ слева */
+    border: 1px solid #000; /* Рамка вокруг текста */
+    padding: 3px; /* Поля вокруг текста */
+   }

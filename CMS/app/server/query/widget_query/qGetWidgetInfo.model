@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aWidgetId" nullable="true" parameterMode="1" selectionForm="null" type="Number"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147005676215900" entityLocationX="302" entityLocationY="33" entityWidth="150" tableAlias="t1" tableName="widget" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147005676216200" entityLocationX="497" entityLocationY="35" entityWidth="150" tableAlias="t" tableName="widget_data" tableSchemaName=""/>
+  <relation leftEntityFieldName="widget_id" leftEntityId="147005676216200" rightEntityFieldName="widget_id" rightEntityId="147005676215900"/>
+  <relation leftEntityId="-1" leftEntityParameterName="aWidgetId" rightEntityFieldName="widget_id" rightEntityId="147005676215900"/>
+</datamodel>

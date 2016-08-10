@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aPageId" nullable="true" parameterMode="1" selectionForm="null" type="Number"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038992364202" entityLocationX="622" entityLocationY="86" entityWidth="150" tableAlias="t2" tableName="template" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038992364201" entityLocationX="369" entityLocationY="108" entityWidth="150" tableAlias="t1" tableName="template" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038993702701" entityLocationX="998" entityLocationY="48" entityWidth="150" tableAlias="t4" tableName="widget" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038992364200" entityLocationX="170" entityLocationY="120" entityWidth="150" tableAlias="t" tableName="page" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038993702700" entityLocationX="806" entityLocationY="85" entityWidth="150" tableAlias="t3" tableName="page_widgets" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147038993704200" entityLocationX="1205" entityLocationY="86" entityWidth="150" tableAlias="t5" tableName="widget_data" tableSchemaName=""/>
+  <relation leftEntityFieldName="widget_id" leftEntityId="147038993702701" rightEntityFieldName="widget_id" rightEntityId="147038993702700"/>
+  <relation leftEntityFieldName="template_id" leftEntityId="147038992364202" rightEntityFieldName="template_id" rightEntityId="147038993702700"/>
+  <relation leftEntityFieldName="widget_id" leftEntityId="147038993704200" rightEntityFieldName="widget_id" rightEntityId="147038993702701"/>
+  <relation leftEntityFieldName="template_id" leftEntityId="147038992364200" rightEntityFieldName="template_id" rightEntityId="147038992364201"/>
+  <relation leftEntityFieldName="template_id" leftEntityId="147038992364201" rightEntityFieldName="root_template" rightEntityId="147038992364202"/>
+  <relation leftEntityId="-1" leftEntityParameterName="aPageId" rightEntityFieldName="page_id" rightEntityId="147038992364200"/>
+</datamodel>

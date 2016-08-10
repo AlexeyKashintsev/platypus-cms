@@ -11,5 +11,6 @@ define('Settings', [], function () {
         Object.defineProperty(Settings, 'Context', {value: '/cms'});
         Object.defineProperty(Settings, 'localPath', {value: '/Repos/platypus-cms/CMS/static/'});
         Object.defineProperty(Settings, 'localTempPath', {value: '/Repos/platypus-cms/CMS/pub/'});
+        Object.defineProperty(Settings, 'localPagePath', {value: '/Repos/platypus-cms/CMS/pages/'});
     return Settings;
 });

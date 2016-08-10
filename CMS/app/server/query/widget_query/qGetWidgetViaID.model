@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aWidgetId" nullable="true" parameterMode="1" selectionForm="null" type="Number"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147005639850200" entityLocationX="228" entityLocationY="19" entityWidth="150" tableAlias="t" tableName="widget" tableSchemaName=""/>
+  <relation leftEntityId="-1" leftEntityParameterName="aWidgetId" rightEntityFieldName="widget_id" rightEntityId="147005639850200"/>
+</datamodel>

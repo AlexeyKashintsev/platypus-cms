@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><layout title="" view="view">
   <AnchorsPane background="#ffffff" cursor="0" name="view" prefHeight="300px" prefWidth="400px"/>
   <Button cursor="0" name="button" parent="view" prefHeight="30px" prefWidth="100px" text="button">
-    <AnchorsPaneConstraints height="30px" left="50px" top="160px" width="100px"/>
+    <AnchorsPaneConstraints height="30px" left="0px" top="0px" width="100px"/>
   </Button>
+  <ScrollPane cursor="0" name="scrollPane" parent="view" prefHeight="170px" prefWidth="330px">
+    <AnchorsPaneConstraints height="170px" left="10px" top="40px" width="330px"/>
+  </ScrollPane>
+  <TextArea name="textArea" parent="scrollPane" prefHeight="168px" prefWidth="328px" text="textArea"/>
+  <Button cursor="0" name="button1" parent="view" prefHeight="30px" prefWidth="100px" text="button1">
+    <AnchorsPaneConstraints bottom="40px" height="30px" left="10px" width="100px"/>
+  </Button>
+  <DropDownButton cursor="0" name="dropDownButton" parent="view" prefHeight="30px" prefWidth="111px" text="dropDownButton">
+    <AnchorsPaneConstraints bottom="40px" height="30px" left="230px" width="111px"/>
+  </DropDownButton>
 </layout>

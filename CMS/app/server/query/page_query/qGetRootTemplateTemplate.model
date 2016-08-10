@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aName" nullable="true" parameterMode="1" selectionForm="null" type="String"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="8" entityLocationY="7" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147064484874800" entityLocationX="403" entityLocationY="21" entityWidth="150" tableAlias="t" tableName="root_template_template" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147064514533200" entityLocationX="200" entityLocationY="38" entityWidth="150" tableAlias="t1" tableName="root_template" tableSchemaName=""/>
+  <relation leftEntityId="-1" leftEntityParameterName="aName" rightEntityFieldName="name" rightEntityId="147064514533200"/>
+  <relation leftEntityFieldName="root_template_id" leftEntityId="147064484874800" rightEntityFieldName="root_template_id" rightEntityId="147064514533200"/>
+</datamodel>

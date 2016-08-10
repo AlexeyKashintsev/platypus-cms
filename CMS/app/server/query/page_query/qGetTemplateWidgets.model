@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel>
+  <parameters>
+    <parameter description="" name="aTemplateId" nullable="true" parameterMode="1" selectionForm="null" type="Number"/>
+  </parameters>
+  <parametersEntity entityHeight="200" entityIconified="false" entityLocationX="-1" entityLocationY="2" entityWidth="150"/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147004579342600" entityLocationX="615" entityLocationY="49" entityWidth="150" tableAlias="t2" tableName="widget_data" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147004579342400" entityLocationX="422" entityLocationY="45" entityWidth="150" tableAlias="t" tableName="widget" tableSchemaName=""/>
+  <entity Title="" entityHeight="200" entityIconified="false" entityId="147004579342100" entityLocationX="227" entityLocationY="44" entityWidth="150" tableAlias="t1" tableName="page_widgets" tableSchemaName=""/>
+  <relation leftEntityFieldName="widget_id" leftEntityId="147004579342400" rightEntityFieldName="widget_id" rightEntityId="147004579342100"/>
+  <relation leftEntityFieldName="widget_id" leftEntityId="147004579342600" rightEntityFieldName="widget_id" rightEntityId="147004579342400"/>
+  <relation leftEntityId="-1" leftEntityParameterName="aTemplateId" rightEntityFieldName="template_id" rightEntityId="147004579342100"/>
+</datamodel>

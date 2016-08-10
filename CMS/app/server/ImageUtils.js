@@ -28,8 +28,8 @@ define('ImageUtils', ['resource', 'Settings', 'FileUtils'], function (Resource, 
 
         self.processLoadedImageFile = function (aFromDirectory, anIntoDirectory, callback, err) {
             var obj = Resource.load(encodeURI(aFromDirectory));
-            FileUtils.createFile(obj, anIntoDirectory, function() {});
-            FileUtils.createFile(obj, SmallImageDirectory + anIntoDirectory, function() {});
+            FileUtils.createImageFile(obj, anIntoDirectory, function() {});
+            FileUtils.createImageFile(obj, SmallImageDirectory + anIntoDirectory, function() {});
             callback('Success');
         };
 

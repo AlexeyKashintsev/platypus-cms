@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?><datamodel datasource="null">
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147003451056300" entityLocationX="412" entityLocationY="133" entityWidth="150" tableName="type"/>
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147003450180900" entityLocationX="146" entityLocationY="125" entityWidth="150" tableName="item"/>
+</datamodel>
