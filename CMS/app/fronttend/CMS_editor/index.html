@@ -35,8 +35,8 @@
 </template>
 
 <template id="page-editor-template">
-    <div id="page-editor">
-        <div  id="pageForm">
+    <div class="content">
+        <div   class="editor-form">
             <form>
                 <label>
                     Page name
@@ -82,18 +82,45 @@
 
 <template id="page-header-template">
     <div id="page-header">
-        <button>Page editor</button>
-        <button>Widget editor</button>
-        <button>Resource gallery</button>
+        <button v-for="view in views" :class="{ 'active-button': view.name === currentView.name}"
+                @click="viewSelected(view)">
+            {{view.name}}
+        </button>
+    </div>
+</template>
+
+<template id="widget-editor-template">
+    <div class="content widget-editor">
+        <div class="editor-form">
+            <form>
+                <label for="data">Data</label>
+                <!--<div>-->
+                    <textarea  id="data" ></textarea>
+                <!--</div>-->
+                <label for="code">Code</label>
+                <!--<div>-->
+                    <textarea  id="code" ></textarea>
+                <!--</div>-->
+                <div>
+                    <button>Save</button>
+                    <button>Cancel</button>
+
+                </div>
+            </form>
+        </div>
 
     </div>
 </template>
 
+
     <div id="page">
-        <page-header></page-header>
+        <page-header :current-view.sync="currentView"></page-header>
         <div id="content">
             <side-bar icon-toggle="show"></side-bar>
-            <page-editor></page-editor>
+            <component :is="currentView.component" keep-alive>
+            </component>
+            <!--<page-editor></page-editor>-->
+            <!--<widget-editor class="widget-editor"></widget-editor>-->
         </div>
     </div>
 

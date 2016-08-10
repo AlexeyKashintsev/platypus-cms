@@ -29,16 +29,38 @@ window.onload = function () {
         },
         template:''
     });
+    var views=[];
+    views.push({name:'Page editor', component:'pageEditor'},
+               {name:'Widget editor', component:'widgetEditor'},
+               {name:'Resource gallery', component:'resourceGallery'});
 
     new Vue({
         el: 'body',
         data:{
             pageModel:pageModel,
-            currentPage:pageModel[0]
+            currentPage:pageModel[0],
+            currentView:views[0]
         },
         components: {
             'pageHeader':{
-                template:'#page-header-template'
+                template:'#page-header-template',
+                data:function(){
+                    return{
+                        views:views
+                    }
+                },
+                props:{
+                    currentView:Object
+                },
+                methods:{
+                    viewSelected:function(view){
+                        if(this.currentView.name !== view.name){
+                            this.currentView=this.views[this.views.indexOf(view)];
+
+                        }
+
+                    }
+                },
             },
             'pageEditor':{
                 template:'#page-editor-template',
@@ -52,6 +74,10 @@ window.onload = function () {
                         this.$set('currentPage',page);
                     }
                 }
+            },
+            'widgetEditor':{
+                template:'#widget-editor-template',
+
             },
             'sideBar':{
                 template:'#side-bar-template',
