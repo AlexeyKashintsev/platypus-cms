@@ -1,0 +1,178 @@
+body {
+  height: 100%;
+  margin: auto;
+  position: relative;
+  margin: 50px; }
+
+#page {
+  font-family: "Arial";
+  width: 900px;
+  margin: auto;
+  vertical-align: middle;
+  height: 100%; }
+  #page #page-header {
+    position: static;
+    max-width: 900px;
+    min-width: 100px;
+    margin: auto;
+    margin-bottom: 0;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    z-index: 101;
+    text-align: center;
+    vertical-align: middle;
+    flex-direction: row;
+    top: 1%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; }
+    #page #page-header button {
+      width: 100%;
+      height: 50px;
+      background: ghostwhite;
+      border: 0;
+      outline: none;
+      font-size: 14pt; }
+  #page #content {
+    background: whitesmoke;
+    height: 100%;
+    position: relative;
+    display: flex;
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center; }
+    #page #content #side-bar {
+      display: flex;
+      flex-direction: row;
+      height: 800px;
+      text-align: center;
+      vertical-align: middle;
+      justify-content: center; }
+      #page #content #side-bar #side-bar-body {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        background: #2F4F4F; }
+        #page #content #side-bar #side-bar-body #side-bar-header {
+          max-height: 50px;
+          height: 120px;
+          background: #DDDDDD; }
+        #page #content #side-bar #side-bar-body #side-bar-content {
+          min-height: 10px;
+          height: 100%;
+          background: #383838; }
+          #page #content #side-bar #side-bar-body #side-bar-content ul {
+            margin: 0;
+            list-style-type: none;
+            height: 100%;
+            overflow-x: hidden;
+            text-align: left;
+            padding: 0px; }
+            #page #content #side-bar #side-bar-body #side-bar-content ul li {
+              position: relative;
+              color: #DDDDDD;
+              height: 40px;
+              min-width: 180px;
+              min-height: 30px;
+              max-height: 50px;
+              box-shadow: inset 0px 2px 2px 0px rgba(0, 0, 0, 0.5);
+              cursor: pointer; }
+            #page #content #side-bar #side-bar-body #side-bar-content ul li:last-child {
+              box-shadow: inset 0px 2px 2px 0px rgba(0, 0, 0, 0.5), 0px 2px 2px 0px rgba(0, 0, 0, 0.5); }
+            #page #content #side-bar #side-bar-body #side-bar-content ul li:hover {
+              color: #778899;
+              box-shadow: 0px 4px 2px 0px rgba(0, 0, 0, 0.5), 0px -4px 2px 0px rgba(0, 0, 0, 0.5); }
+        #page #content #side-bar #side-bar-body #side-bar-footer {
+          max-height: 50px;
+          min-height: 10px;
+          height: 120px;
+          background: #DDDDDD; }
+      #page #content #side-bar #side-bar-toggle {
+        width: 25px;
+        display: flex;
+        text-align: center;
+        vertical-align: middle;
+        background: #B7B7B7;
+        justify-content: center;
+        flex-direction: column;
+        cursor: pointer; }
+        #page #content #side-bar #side-bar-toggle span {
+          transform: rotate(-90deg);
+          color: black; }
+      #page #content #side-bar #side-bar-toggle:hover {
+        box-shadow: 5px 0 0px -2px rgba(0, 0, 0, 0.5); }
+      #page #content #side-bar ::-webkit-scrollbar {
+        width: 1em; }
+      #page #content #side-bar ::-webkit-scrollbar-track {
+        box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.5); }
+      #page #content #side-bar ::-webkit-scrollbar-thumb {
+        background: #777777;
+        outline: 1px solid slategrey; }
+    #page #content *:focus {
+      outline: none; }
+    #page #content #page-editor {
+      width: 900px;
+      display: flex; }
+      #page #content #page-editor #pageForm {
+        height: 100%;
+        width: 90%;
+        margin: auto;
+        display: flex;
+        text-align: center;
+        vertical-align: middle;
+        justify-content: center;
+        background: transparent; }
+        #page #content #page-editor #pageForm form {
+          width: 100%;
+          margin: 0px;
+          padding: 0px;
+          height: 100%;
+          text-align: left; }
+          #page #content #page-editor #pageForm form label {
+            text-align: left;
+            display: block;
+            font-size: 14pt;
+            padding: 12px; }
+          #page #content #page-editor #pageForm form div {
+            text-align: left;
+            width: 100%;
+            display: block;
+            margin: auto;
+            margin-left: 25px;
+            padding: 0; }
+            #page #content #page-editor #pageForm form div label {
+              font-size: 11pt;
+              display: block;
+              padding-left: 0; }
+            #page #content #page-editor #pageForm form div input {
+              font-size: 11pt;
+              display: block;
+              width: 90%;
+              height: 50px;
+              padding: 0 8px;
+              border: none; }
+            #page #content #page-editor #pageForm form div textarea {
+              padding: 8px;
+              min-width: 90%;
+              height: 100px;
+              border: none; }
+          #page #content #page-editor #pageForm form div:last-child {
+            text-align: right;
+            margin: 20px; }
+          #page #content #page-editor #pageForm form button {
+            font-family: "Arial";
+            font-size: 14pt;
+            width: 200px;
+            height: 50px;
+            margin: 20px;
+            border: 0;
+            outline: none;
+            border-radius: 10px;
+            background: #B7B7B7; }
+
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+    <script src="editor.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/sass/main.css">
+</head>
+<body>
+
+
+<template id="side-bar-template">
+    <div id="side-bar">
+        <div id="side-bar-body">
+            <div id="side-bar-header" v-show="show">
+            </div>
+            <div id="side-bar-content" v-show="show">
+                <ul >
+                    <li v-for="item in items" @click="itemSelected(item.name)">
+                        {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+            <div id="side-bar-footer" v-show="show">
+            </div>
+        </div>
+
+        <div id="side-bar-toggle" @click="show=!show">
+    <span>
+    {{iconToggle}}
+</span>
+        </div>
+    </div>
+</template>
+
+<template id="page-editor-template">
+    <div id="page-editor">
+        <div  id="pageForm">
+            <form>
+                <label>
+                    Page name
+                </label>
+                <div>
+                    <input type="text" id="pageName" v-model="currentPage.pageName" required >
+                </div>
+                <label for="pageURL">
+                    Page URL
+                </label>
+                <div>
+                    <input type="text" id="pageURL" required >
+                </div>
+
+                <label for="pageURL">
+                    Meta
+                </label>
+                <div>
+                    <label for="author">Author</label>
+                    <input type="text" id="author" >
+                </div>
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" id="title" >
+                </div>
+                <div>
+                    <label for="charset">Charset</label>
+                    <input type="text" id="charset" >
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <textarea  id="description" ></textarea>
+                </div>
+                <div>
+                    <button>Save</button>
+                    <button>Cancel</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="page-header-template">
+    <div id="page-header">
+        <button>Page editor</button>
+        <button>Widget editor</button>
+        <button>Resource gallery</button>
+
+    </div>
+</template>
+
+    <div id="page">
+        <page-header></page-header>
+        <div id="content">
+            <side-bar icon-toggle="show"></side-bar>
+            <page-editor></page-editor>
+        </div>
+    </div>
+
+
+</body>
+</html>
