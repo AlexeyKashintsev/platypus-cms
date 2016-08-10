@@ -35,9 +35,13 @@ body {
       width: 100%;
       height: 50px;
       background: ghostwhite;
+      color: #DDDDDD;
       border: 0;
       outline: none;
       font-size: 14pt; }
+    #page #page-header .active-button {
+      background: whitesmoke;
+      color: #383838; }
   #page #content {
     background: whitesmoke;
     height: 100%;
@@ -115,10 +119,10 @@ body {
         outline: 1px solid slategrey; }
     #page #content *:focus {
       outline: none; }
-    #page #content #page-editor {
+    #page #content .content {
       width: 900px;
       display: flex; }
-      #page #content #page-editor #pageForm {
+      #page #content .content .editor-form {
         height: 100%;
         width: 90%;
         margin: auto;
@@ -127,44 +131,48 @@ body {
         vertical-align: middle;
         justify-content: center;
         background: transparent; }
-        #page #content #page-editor #pageForm form {
+        #page #content .content .editor-form form {
           width: 100%;
           margin: 0px;
           padding: 0px;
-          height: 100%;
-          text-align: left; }
-          #page #content #page-editor #pageForm form label {
+          height: 100%; }
+          #page #content .content .editor-form form label {
             text-align: left;
             display: block;
             font-size: 14pt;
             padding: 12px; }
-          #page #content #page-editor #pageForm form div {
+          #page #content .content .editor-form form div {
             text-align: left;
             width: 100%;
             display: block;
             margin: auto;
             margin-left: 25px;
             padding: 0; }
-            #page #content #page-editor #pageForm form div label {
+            #page #content .content .editor-form form div label {
               font-size: 11pt;
               display: block;
               padding-left: 0; }
-            #page #content #page-editor #pageForm form div input {
+            #page #content .content .editor-form form div input {
               font-size: 11pt;
               display: block;
-              width: 90%;
+              min-width: 90%;
               height: 50px;
               padding: 0 8px;
               border: none; }
-            #page #content #page-editor #pageForm form div textarea {
+            #page #content .content .editor-form form div textarea {
               padding: 8px;
               min-width: 90%;
-              height: 100px;
+              min-height: 100px;
+              max-height: 200px;
+              height: 100%;
               border: none; }
-          #page #content #page-editor #pageForm form div:last-child {
+          #page #content .content .editor-form form div:last-child {
+            position: absolute;
+            top: 83.5%;
+            left: -5%;
             text-align: right;
             margin: 20px; }
-          #page #content #page-editor #pageForm form button {
+          #page #content .content .editor-form form button {
             font-family: "Arial";
             font-size: 14pt;
             width: 200px;
@@ -174,5 +182,18 @@ body {
             outline: none;
             border-radius: 10px;
             background: #B7B7B7; }
+    #page #content .widget-editor form label {
+      text-align: left;
+      display: block;
+      font-size: 14pt;
+      margin: 10px 0;
+      padding-left: 0 !important; }
+    #page #content .widget-editor form textarea {
+      min-width: 91.5%;
+      min-height: 100px;
+      max-height: 260px;
+      height: 100%;
+      border: none;
+      width: 100%; }
 
 /*# sourceMappingURL=main.css.map */
