@@ -1,15 +1,14 @@
-body {
-  height: 100%;
-  margin: auto;
-  position: relative;
-  margin: 50px; }
-
 #page {
   font-family: "Arial";
   width: 900px;
-  margin: auto;
-  vertical-align: middle;
-  height: 100%; }
+  margin: auto; }
+  #page ::-webkit-scrollbar {
+    width: 1em; }
+  #page ::-webkit-scrollbar-track {
+    box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.5); }
+  #page ::-webkit-scrollbar-thumb {
+    background: #777777;
+    outline: 1px solid slategrey; }
   #page #page-header {
     position: static;
     max-width: 900px;
@@ -42,42 +41,45 @@ body {
     #page #page-header .active-button {
       background: whitesmoke;
       color: #383838; }
-  #page #content {
+  #page .content {
     background: whitesmoke;
-    height: 100%;
-    position: relative;
     display: flex;
     text-align: center;
     vertical-align: middle;
     justify-content: center; }
-    #page #content #side-bar {
+    #page .content #side-bar {
       display: flex;
       flex-direction: row;
-      height: 800px;
       text-align: center;
       vertical-align: middle;
       justify-content: center; }
-      #page #content #side-bar #side-bar-body {
+      #page .content #side-bar #side-bar-body {
         text-align: center;
         display: flex;
         flex-direction: column;
         background: #2F4F4F; }
-        #page #content #side-bar #side-bar-body #side-bar-header {
+        #page .content #side-bar #side-bar-body #side-bar-header {
+          min-height: 15px;
           max-height: 50px;
-          height: 120px;
+          height: 15%;
           background: #DDDDDD; }
-        #page #content #side-bar #side-bar-body #side-bar-content {
+        #page .content #side-bar #side-bar-body #side-bar-footer {
+          min-height: 15px;
+          max-height: 50px;
+          height: 15%;
+          background: #DDDDDD; }
+        #page .content #side-bar #side-bar-body #side-bar-content {
           min-height: 10px;
           height: 100%;
           background: #383838; }
-          #page #content #side-bar #side-bar-body #side-bar-content ul {
+          #page .content #side-bar #side-bar-body #side-bar-content ul {
             margin: 0;
             list-style-type: none;
             height: 100%;
             overflow-x: hidden;
             text-align: left;
             padding: 0px; }
-            #page #content #side-bar #side-bar-body #side-bar-content ul li {
+            #page .content #side-bar #side-bar-body #side-bar-content ul li {
               position: relative;
               color: #DDDDDD;
               height: 40px;
@@ -86,17 +88,12 @@ body {
               max-height: 50px;
               box-shadow: inset 0px 2px 2px 0px rgba(0, 0, 0, 0.5);
               cursor: pointer; }
-            #page #content #side-bar #side-bar-body #side-bar-content ul li:last-child {
+            #page .content #side-bar #side-bar-body #side-bar-content ul li:last-child {
               box-shadow: inset 0px 2px 2px 0px rgba(0, 0, 0, 0.5), 0px 2px 2px 0px rgba(0, 0, 0, 0.5); }
-            #page #content #side-bar #side-bar-body #side-bar-content ul li:hover {
+            #page .content #side-bar #side-bar-body #side-bar-content ul li:hover {
               color: #778899;
               box-shadow: 0px 4px 2px 0px rgba(0, 0, 0, 0.5), 0px -4px 2px 0px rgba(0, 0, 0, 0.5); }
-        #page #content #side-bar #side-bar-body #side-bar-footer {
-          max-height: 50px;
-          min-height: 10px;
-          height: 120px;
-          background: #DDDDDD; }
-      #page #content #side-bar #side-bar-toggle {
+      #page .content #side-bar #side-bar-toggle {
         width: 25px;
         display: flex;
         text-align: center;
@@ -105,24 +102,17 @@ body {
         justify-content: center;
         flex-direction: column;
         cursor: pointer; }
-        #page #content #side-bar #side-bar-toggle span {
+        #page .content #side-bar #side-bar-toggle span {
           transform: rotate(-90deg);
           color: black; }
-      #page #content #side-bar #side-bar-toggle:hover {
+      #page .content #side-bar #side-bar-toggle:hover {
         box-shadow: 5px 0 0px -2px rgba(0, 0, 0, 0.5); }
-      #page #content #side-bar ::-webkit-scrollbar {
-        width: 1em; }
-      #page #content #side-bar ::-webkit-scrollbar-track {
-        box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.5); }
-      #page #content #side-bar ::-webkit-scrollbar-thumb {
-        background: #777777;
-        outline: 1px solid slategrey; }
-    #page #content *:focus {
+    #page .content *:focus {
       outline: none; }
-    #page #content .content {
+    #page .content .view {
       width: 900px;
       display: flex; }
-      #page #content .content .editor-form {
+      #page .content .view .editor-form {
         height: 100%;
         width: 90%;
         margin: auto;
@@ -131,48 +121,47 @@ body {
         vertical-align: middle;
         justify-content: center;
         background: transparent; }
-        #page #content .content .editor-form form {
+        #page .content .view .editor-form .form {
           width: 100%;
           margin: 0px;
           padding: 0px;
           height: 100%; }
-          #page #content .content .editor-form form label {
+          #page .content .view .editor-form .form label {
             text-align: left;
             display: block;
             font-size: 14pt;
-            padding: 12px; }
-          #page #content .content .editor-form form div {
+            padding: 6px; }
+          #page .content .view .editor-form .form div {
             text-align: left;
             width: 100%;
             display: block;
             margin: auto;
             margin-left: 25px;
             padding: 0; }
-            #page #content .content .editor-form form div label {
+            #page .content .view .editor-form .form div label {
               font-size: 11pt;
               display: block;
               padding-left: 0; }
-            #page #content .content .editor-form form div input {
+            #page .content .view .editor-form .form div input {
               font-size: 11pt;
               display: block;
               min-width: 90%;
-              height: 50px;
+              height: 30px;
               padding: 0 8px;
               border: none; }
-            #page #content .content .editor-form form div textarea {
+            #page .content .view .editor-form .form div textarea {
               padding: 8px;
               min-width: 90%;
               min-height: 100px;
               max-height: 200px;
               height: 100%;
               border: none; }
-          #page #content .content .editor-form form div:last-child {
-            position: absolute;
-            top: 83.5%;
-            left: -5%;
+          #page .content .view .editor-form .form .main-buttons {
+            position: relative;
+            top: 100%;
             text-align: right;
-            margin: 20px; }
-          #page #content .content .editor-form form button {
+            margin: 0; }
+          #page .content .view .editor-form .form button {
             font-family: "Arial";
             font-size: 14pt;
             width: 200px;
@@ -182,18 +171,47 @@ body {
             outline: none;
             border-radius: 10px;
             background: #B7B7B7; }
-    #page #content .widget-editor form label {
-      text-align: left;
-      display: block;
-      font-size: 14pt;
+    #page .content .widget-editor .form label {
       margin: 10px 0;
       padding-left: 0 !important; }
-    #page #content .widget-editor form textarea {
-      min-width: 91.5%;
-      min-height: 100px;
-      max-height: 260px;
-      height: 100%;
-      border: none;
-      width: 100%; }
+    #page .content .widget-editor .form div textarea {
+      box-shadow: inset 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+      min-height: 300px;
+      max-height: 295px;
+      height: 500px !important;
+      background: whitesmoke; }
+    #page .content .page-editor #keywords {
+      display: flex;
+      flex-wrap: wrap;
+      text-align: left;
+      position: relative;
+      margin: 0;
+      margin-right: 50px;
+      width: 100%;
+      min-height: 50px;
+      max-height: 100px;
+      overflow: auto;
+      left: 0;
+      max-width: 92%; }
+      #page .content .page-editor #keywords #keyword {
+        width: auto;
+        display: inline-flex;
+        margin: 5px;
+        position: relative;
+        left: 0; }
+        #page .content .page-editor #keywords #keyword input {
+          min-width: 0 !important;
+          width: 85px;
+          border: 1px solid transparent;
+          border-radius: 10px; }
+        #page .content .page-editor #keywords #keyword .add-keyword {
+          position: relative;
+          left: -10px;
+          text-align: center;
+          padding: 0;
+          margin: 0;
+          width: 20px;
+          height: 20px;
+          vertical-align: middle; }
 
 /*# sourceMappingURL=main.css.map */

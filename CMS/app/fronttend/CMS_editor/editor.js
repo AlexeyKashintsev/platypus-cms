@@ -6,26 +6,26 @@ window.onload = function () {
 
     var pageModel=[];
     pageModel.push({
-        pageName:'page 0',
+        name:'page 0',
         pageURL:'',
         meta:{
             author:'',
             title:'',
             charset:'',
             description:'',
-            keywords:[],
+            keywords:['test111111111','test2','test3','test4','test5','test6','test7','test','tes','12','234','4322','te334st8','dgdg','sdfs'],
         },
         template:''
     });
     pageModel.push({
-        pageName:'page 1',
+        name:'page 1',
         pageURL:'',
         meta:{
             author:'',
             title:'',
             charset:'',
             description:'',
-            keywords:[],
+            keywords:['test9','test10','test11','test12','test13','test14','test15','test16'],
         },
         template:''
     });
@@ -56,7 +56,6 @@ window.onload = function () {
                     viewSelected:function(view){
                         if(this.currentView.name !== view.name){
                             this.currentView=this.views[this.views.indexOf(view)];
-
                         }
 
                     }
@@ -66,12 +65,30 @@ window.onload = function () {
                 template:'#page-editor-template',
                 data: function (){
                     return {
-                        currentPage:''
+                        currentPage:pageModel[0],
+                    }
+                },
+                props:{
+                    addingKeyword:{
+                        type:String,
+                        default:function () {
+                            return '';
+                        }
                     }
                 },
                 events:{
                     itemSelected:function(page){
                         this.$set('currentPage',page);
+                    }
+                },
+                methods:{
+                    deleteKeyword:function(keyword){
+                        this.currentPage.meta.keywords.$remove(keyword);
+                    },
+                    addKeyword:function (keyword) {
+                        if(this.currentPage.meta.keywords.indexOf(keyword)===-1)
+                            this.currentPage.meta.keywords.unshift(keyword);
+
                     }
                 }
             },
@@ -89,14 +106,14 @@ window.onload = function () {
                 props:{
                     show: Boolean,
                     items:{
-                        type: Object,
+                        type: Array,
                         default: function () {
-                            var items = [];
-                            var i;
-                            for(i=0;i<30;i++){
-                                items.push({name:'page '+i});
-                            }
-                            return items;
+                            // var items = [];
+                            // var i;
+                            // for(i=0;i<30;i++){
+                            //     items.push({name:'page '+i});
+                            // }
+                            return pageModel;
 
                         }
                     },
@@ -122,17 +139,12 @@ window.onload = function () {
         methods:{
             selectPage:function (pageName){
                 for(var i=0;i<this.pageModel.length;i++){
-                    if(this.pageModel[i].pageName+'' === pageName+''){
+                    if(this.pageModel[i].name+'' === pageName+''){
                         this.$set('currentPage',this.pageModel[i]);
                         this.$broadcast('itemSelected',this.currentPage);
                         return;
                     }
                 };
-                this.$set('currentPage',this.getPage(pageName));
-
-            },
-            getPage: function(pageName){
-                return this.currentPage;
             }
         },
         events:{

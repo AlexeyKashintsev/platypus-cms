@@ -9,7 +9,6 @@
 </head>
 <body>
 
-
 <template id="side-bar-template">
     <div id="side-bar">
         <div id="side-bar-body">
@@ -27,28 +26,28 @@
         </div>
 
         <div id="side-bar-toggle" @click="show=!show">
-    <span>
-    {{iconToggle}}
-</span>
+            <span>
+                {{iconToggle}}
+            </span>
         </div>
     </div>
 </template>
 
 <template id="page-editor-template">
-    <div class="content">
-        <div   class="editor-form">
-            <form>
+    <div class="view page-editor">
+        <div class="editor-form">
+            <div class="form">
                 <label>
                     Page name
                 </label>
                 <div>
-                    <input type="text" id="pageName" v-model="currentPage.pageName" required >
+                    <input type="text" id="pageName" v-model="currentPage.name"  >
                 </div>
                 <label for="pageURL">
                     Page URL
                 </label>
                 <div>
-                    <input type="text" id="pageURL" required >
+                    <input type="text" id="pageURL"  v-model="currentPage.pageURL"  >
                 </div>
 
                 <label for="pageURL">
@@ -56,26 +55,42 @@
                 </label>
                 <div>
                     <label for="author">Author</label>
-                    <input type="text" id="author" >
+                    <input type="text" id="author" v-model="currentPage.meta.author" >
                 </div>
                 <div>
                     <label for="title">Title</label>
-                    <input type="text" id="title" >
+                    <input type="text" id="title"  v-model="currentPage.meta.title">
                 </div>
                 <div>
                     <label for="charset">Charset</label>
-                    <input type="text" id="charset" >
+                    <input type="text" id="charset"  v-model="currentPage.meta.charset">
                 </div>
                 <div>
                     <label for="description">Description</label>
-                    <textarea  id="description" ></textarea>
+                    <textarea  id="description"  v-model="currentPage.meta.description"></textarea>
                 </div>
                 <div>
+                    <label for="keywords">Keywords</label>
+                    <input type="text"  @keyup.enter="addKeyword(addingKeyword)" v-model="addingKeyword" placeholder="enter to add">
+                    <div id="keywords">
+                        <div id="keyword" v-for="keyword in currentPage.meta.keywords" >
+                            <input type="text"  v-model="keyword">
+                            <button class="add-keyword" @click="deleteKeyword(keyword)">-</button>
+                        </div>
+                    </div>
+                </div>
+                <label>
+                    Template
+                </label>
+                <div>
+                    <input type="text"  v-model="currentPage.name"  placeholder="enter">
+                </div>
+                <div class="main-buttons">
                     <button>Save</button>
                     <button>Cancel</button>
 
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
@@ -90,40 +105,36 @@
 </template>
 
 <template id="widget-editor-template">
-    <div class="content widget-editor">
+    <div class="view widget-editor">
         <div class="editor-form">
-            <form>
+            <div class="form">
                 <label for="data">Data</label>
-                <!--<div>-->
-                    <textarea  id="data" ></textarea>
-                <!--</div>-->
-                <label for="code">Code</label>
-                <!--<div>-->
-                    <textarea  id="code" ></textarea>
-                <!--</div>-->
                 <div>
+                    <textarea  id="data" ></textarea>
+                </div>
+                <label for="code">Code</label>
+                <div>
+                    <textarea  id="code" ></textarea>
+                </div>
+                <div class="main-buttons">
                     <button>Save</button>
                     <button>Cancel</button>
 
                 </div>
-            </form>
+            </div>
         </div>
 
     </div>
 </template>
 
-
     <div id="page">
         <page-header :current-view.sync="currentView"></page-header>
-        <div id="content">
-            <side-bar icon-toggle="show"></side-bar>
+        <div class="content">
+            <side-bar icon-toggle="show" :items="pageModel"></side-bar>
             <component :is="currentView.component" keep-alive>
             </component>
-            <!--<page-editor></page-editor>-->
-            <!--<widget-editor class="widget-editor"></widget-editor>-->
         </div>
     </div>
-
 
 </body>
 </html>
