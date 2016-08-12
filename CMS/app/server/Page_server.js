@@ -4,12 +4,13 @@
  * @stateless
  * @public 
  */
-define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_editor_API'], function (Orm, Page_display_API, Page_creator_API, Page_editor_API, ModuleName) {
+define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_editor_API', 'widget_API'], function (Orm, Page_display_API, Page_creator_API, Page_editor_API, Widget_API, ModuleName) {
     function module_constructor() {
         var self = this
         , page_display_API = new Page_display_API()
         , page_creator_API = new Page_creator_API()
-        , page_editor_API = new Page_editor_API();
+        , page_editor_API = new Page_editor_API()
+        , widget_API = new Widget_API();
 
         /*
          * @get /createPage
@@ -63,6 +64,13 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         };
         
         /*
+         * @get/getWidgetsList
+         */
+        self.getWidgetsList = function (callback, error) {
+            widget_API.getWidgetsList(callback, error);
+        };
+        
+        /*
          * @get/getPageInfo
          */
         self.getPageInfo = function (aPageId, callback, error) {
@@ -89,6 +97,7 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         self.changePageMetaInfo = function (aPageId, aMetaInfo, callback, error) {
             page_editor_API.changePageMetaInfo(aPageId, aMetaInfo, callback, error);
         };
+
     }
     return module_constructor;
 });

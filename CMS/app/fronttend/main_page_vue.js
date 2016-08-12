@@ -2,6 +2,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
     var global = this;
     var Server;
     var page_list;
+    var widget_list;
 
     global.parseMetaInfo = function (data, callback, error) {
         var MetaInfo = {};
@@ -28,15 +29,23 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
     var promise = new Promise(function (Resolve, Reject) {
         Rpc.requireRemotes('Page_server', function (serv) {
             Server = serv;
-            Server.getPageList(function (list) {
-                page_list = list;
-                Resolve('Success');
+            Server.getPageList(function (p_list) {
+                Server.getWidgetsList(function (w_list) {
+                    widget_list = w_list;
+                    page_list = p_list;
+                    Resolve('Success');
+                }, function (err) {
+                    Reject(err);
+                });
+            }, function (err) {
+                Reject(err);
             });
         });
     });
     promise.then(function (res) {
         F.cacheBust(true);
         var pageModel = [];
+        var widgetModel = [];
         var views = [];
         views.push({name: 'Page editor', component: 'pageEditor'},
                 {name: 'Widget editor', component: 'widgetEditor'},
@@ -51,17 +60,23 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
         var pages_loaded = new Promise(function (res, err) {
             console.log('Loading ... First page');
             Server.getMeta(page_list[0].page_id, function (data) {
-                global.parseMetaInfo(data, function (meta) {
-                    pageModel.push({
-                        page_inf: page_list[0],
-                        meta_inf: meta
+                Server.getWidgetsList(function (w_list) {
+                    console.log(w_list);
+                    w_list.forEach(function (widget) {
+                        widgetModel.push(widget);
                     });
-                    for (var i = 1; i < page_list.length; i++) {
+                    global.parseMetaInfo(data, function (meta) {
                         pageModel.push({
-                            page_inf: page_list[i]
+                            page_inf: page_list[0],
+                            meta_inf: meta
                         });
-                    }
-                    res('First page - Loaded');
+                        for (var i = 1; i < page_list.length; i++) {
+                            pageModel.push({
+                                page_inf: page_list[i]
+                            });
+                        }
+                        res('First page - Loaded');
+                    });
                 });
             });
         });
@@ -71,6 +86,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 el: 'body',
                 data: {
                     pageModel: pageModel,
+                    widgetModel: widgetModel,
                     currentPage: pageModel[0],
                     currentView: views[0],
                 },
@@ -89,8 +105,8 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             viewSelected: function (view) {
                                 if (this.currentView.name !== view.name) {
                                     this.currentView = this.views[this.views.indexOf(view)];
+                                    this.$dispatch('viewChanged', view.name);
                                 }
-
                             }
                         }
                     },
@@ -140,14 +156,23 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         template: '#side-bar-template',
                         data: function () {
                             return {
+                                showBar: true,
+                                page_list: true,
+                                widget_list: false
                             };
                         },
                         props: {
                             show: Boolean,
-                            items: {
+                            page_items: {
                                 type: Array,
                                 default: function () {
                                     return pageModel;
+                                }
+                            },
+                            widget_items: {
+                                type: Array,
+                                default: function () {
+                                    return widgetModel;
                                 }
                             },
                             iconToggle: String
@@ -163,6 +188,30 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                     this.iconToggle = 'hide';
                                 else
                                     this.iconToggle = 'show';
+                            }
+                        },
+                        events: {
+                            changeSideBar: function (name) {
+                                switch (name) {
+                                    case 'Page editor':
+                                        this.showBar = true;
+                                        this.page_list = true;
+                                        this.widget_list = false;
+                                        console.log(name);
+                                        break;
+                                    case 'Widget editor':
+                                        this.showBar = true;
+                                        this.page_list = false;
+                                        this.widget_list = true;
+                                        console.log(name);
+                                        break;
+                                    case 'Resource gallery':
+                                        this.showBar = false;
+                                        this.page_list = false;
+                                        this.widget_list = false;
+                                        console.log(name);
+                                        break;
+                                }
                             }
                         }
                     }
@@ -234,6 +283,9 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 }
                             }(i, this.currentPage.page_inf.page_id));
                         }
+                    },
+                    viewChanged: function (name) {
+                        this.$broadcast('changeSideBar', name);
                     }
                 }
             });

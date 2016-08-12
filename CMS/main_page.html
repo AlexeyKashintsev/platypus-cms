@@ -17,8 +17,11 @@
             </div>
             <div id="side-bar-content" v-show="show">
                 <ul >
-                    <li v-for="item in items" @click="itemSelected(item.page_inf.page_id)">
+                    <li v-if="page_list" v-for="item in page_items" @click="itemSelected(item.page_inf.page_id)">
                         {{ item.page_inf.page_name }}
+                    </li>
+                    <li v-if="widget_list" v-for="item in widget_items" @click="itemSelected(item.page_inf.page_id)">
+                        {{ item.name }}
                     </li>
                 </ul>
             </div>
@@ -26,7 +29,7 @@
             </div>
         </div>
 
-        <div id="side-bar-toggle" @click="show=!show">
+        <div v-if="showBar" id="side-bar-toggle" @click="show=!show">
             <span>
                 {{iconToggle}}
             </span>
@@ -87,9 +90,8 @@
                     <input type="text"  v-model="currentPage.page_inf.page_name"  placeholder="enter">
                 </div>
                 <div class="main-buttons">
-                    <button v-on:click="savePage">Save</button>
                     <button v-on:click="reloadPage">Cancel</button>
-
+                    <button v-on:click="savePage">Save</button> 
                 </div>
             </div>
         </div>
