@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="vue.js"></script>
-    <script src="editor.js"></script>
-    <link rel="stylesheet" type="text/css" href="stylesheets/sass/main.css">
+    <script src="/cms/app/fronttend/vue.js"></script>
+    <script type="text/javascript" src="web/pwc/pwc.nocache.js" source-path="app" entry-point="fronttend/main_page_vue"></script>
+    <link rel="stylesheet" type="text/css" href="app/fronttend/stylesheets/sass/main.css">
 </head>
+
 <body>
 
 <template id="side-bar-template">
@@ -16,8 +17,8 @@
             </div>
             <div id="side-bar-content" v-show="show">
                 <ul >
-                    <li v-for="item in items" @click="itemSelected(item.name)">
-                        {{ item.name }}
+                    <li v-for="item in items" @click="itemSelected(item.page_inf.page_id)">
+                        {{ item.page_inf.page_name }}
                     </li>
                 </ul>
             </div>
@@ -37,43 +38,43 @@
     <div class="view page-editor">
         <div class="editor-form">
             <div class="form">
-                <label>
+                <label for="pageName">
                     Page name
                 </label>
                 <div>
-                    <input type="text" id="pageName" v-model="currentPage.name"  >
+                    <input type="text" id="pageName" v-model="currentPage.page_inf.page_name"  >
                 </div>
                 <label for="pageURL">
                     Page URL
                 </label>
                 <div>
-                    <input type="text" id="pageURL"  v-model="currentPage.pageURL"  >
+                    <input type="text" id="pageURL"  v-model="currentPage.page_inf.url">
                 </div>
 
-                <label for="pageURL">
+                <label>
                     Meta
                 </label>
                 <div>
                     <label for="author">Author</label>
-                    <input type="text" id="author" v-model="currentPage.meta.author" >
+                    <input type="text" id="author" v-model="currentPage.meta_inf.author" @click="s1" @change="s2(a)">
                 </div>
                 <div>
                     <label for="title">Title</label>
-                    <input type="text" id="title"  v-model="currentPage.meta.title">
+                    <input type="text" id="title"  v-model="currentPage.meta_inf.title">
                 </div>
                 <div>
                     <label for="charset">Charset</label>
-                    <input type="text" id="charset"  v-model="currentPage.meta.charset">
+                    <input type="text" id="charset"  v-model="currentPage.meta_inf.charset">
                 </div>
                 <div>
                     <label for="description">Description</label>
-                    <textarea  id="description"  v-model="currentPage.meta.description"></textarea>
+                    <textarea id="description"  v-model="currentPage.meta_inf.description"></textarea>
                 </div>
                 <div>
                     <label for="keywords">Keywords</label>
                     <input type="text"  @keyup.enter="addKeyword(addingKeyword)" v-model="addingKeyword" placeholder="enter to add">
                     <div id="keywords">
-                        <div id="keyword" v-for="keyword in currentPage.meta.keywords" >
+                        <div id="keyword" v-for="keyword in currentPage.meta_inf.keywords" >
                             <input type="text"  v-model="keyword">
                             <button class="add-keyword" @click="deleteKeyword(keyword)">-</button>
                         </div>
@@ -83,10 +84,10 @@
                     Template
                 </label>
                 <div>
-                    <input type="text"  v-model="currentPage.name"  placeholder="enter">
+                    <input type="text"  v-model="currentPage.page_inf.page_name"  placeholder="enter">
                 </div>
                 <div class="main-buttons">
-                    <button>Save</button>
+                    <button @click="s1">Save</button>
                     <button>Cancel</button>
 
                 </div>

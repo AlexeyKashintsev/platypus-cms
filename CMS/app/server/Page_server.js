@@ -54,7 +54,17 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API'], function 
             });
         };
         
-        //function()
+        self.getPageList = function (callback, error) {
+            page_display_API.getPagesList(callback, error);
+        };
+        
+        self.getPageInfo = function (aPageId, callback, error) {
+            page_display_API.getPageInfo(aPageId, callback, error);
+        };
+        
+        self.getMeta = function (aPageId, callback, error) {
+            page_display_API.getMetaInformation(aPageId, callback, error);
+        }
     }
     return module_constructor;
 });

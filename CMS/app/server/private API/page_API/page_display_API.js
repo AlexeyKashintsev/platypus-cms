@@ -7,12 +7,19 @@
 define('page_display_API', ['orm'], function (Orm, ModuleName) {
     function module_constructor() {
         var self = this, model = Orm.loadModel(ModuleName);
-        
+
         /*
          * @get /getPagesList
          */
         self.getPagesList = function (callback, error) {
             model.qGetPages.query({}, callback, error);
+        };
+
+        /*
+         * @get /getPageInfo
+         */
+        self.getPageInfo = function (aPageId, callback, error) {
+            model.qGetPageInfoViaId.query({aPageId: +aPageId}, callback, error);
         };
 
         /*
