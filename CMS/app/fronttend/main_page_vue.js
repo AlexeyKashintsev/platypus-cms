@@ -176,27 +176,19 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         var self = this;
                         var cur_id = this.currentPage.page_inf.page_id;
                         for (var i = 0; i < this.pageModel.length; i++) {
-                            (function (s) {
-                                if (self.pageModel[s].page_inf.page_id === page_id) {
-                                    console.log(page_id, cur_id);
-                                    if (page_id !== cur_id) {
-                                        console.log('1');
-//                                        Server.getPageInfo(page_id, function (page_inf) {
-//                                            console.log(page_inf[0].page_name);
-//                                            cur_id = page_inf[0].page_name;
-//                                            self.currentPage.page_inf.page_id = cur_id;
-//                                            //self.$set('currentPage.page_inf.page_id', cur_id);
-//                                            //self.$broadcast('itemSelected', self.currentPage);
-//                                        });
-                                        Server.getPageInfo(page_id, function (page_inf) {
-                                            Server.getMeta(page_id, function (data) {
+                            (function (s, cur_Id, page_Id) {
+                                if (self.pageModel[s].page_inf.page_id === page_Id) {
+                                    if (page_Id !== cur_Id) {
+                                        Server.getPageInfo(cur_Id, function (page_inf) {
+                                            self.currentPage.page_inf = page_inf[0];
+                                        });
+                                        Server.getPageInfo(page_Id, function (page_inf) {
+                                            Server.getMeta(page_Id, function (data) {
                                                 global.parseMetaInfo(data, function (meta) {
-                                                    //console.log(self.pageModel[s].meta_inf);
                                                     self.pageModel[s].page_inf = page_inf[0];
                                                     self.pageModel[s].meta_inf = meta;
                                                     self.$set('currentPage', self.pageModel[s]);
                                                     self.$broadcast('itemSelected', self.currentPage);
-                                                    return;
                                                 });
                                             });
                                         }, function (err) {
@@ -204,9 +196,8 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                         });
                                     }
                                 }
-                            }(i));
+                            }(i, cur_id, page_id));
                         }
-                        console.log(cur_id);
                     }
                 },
                 events: {
