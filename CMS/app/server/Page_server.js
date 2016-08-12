@@ -98,6 +98,19 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
             page_editor_API.changePageMetaInfo(aPageId, aMetaInfo, callback, error);
         };
 
+        /*
+         * @get/deletePage
+         */
+        self.deletePage = function (aPageId, callback, error) {
+            page_editor_API.deletePage(aPageId, callback, error);
+        };
+
+        /*
+         * @get/addPageToDB
+         */
+        self.addPageToDB = function (aPageInfo, callback, error) {
+            page_editor_API.createPage(aPageInfo, callback, error);
+        };
     }
     return module_constructor;
 });
