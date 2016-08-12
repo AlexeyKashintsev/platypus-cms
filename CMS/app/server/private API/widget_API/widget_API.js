@@ -14,12 +14,19 @@ define('widget_API', ['orm'], function (Orm, ModuleName) {
         self.getWidgetsList = function (callback, error) {
             model.qGetWidgets.query({}, callback, error);
         };
-
+        
         /*
          * @get /getWidgetInfo
          */
         self.getWidgetInfo = function (aWidgetId, callback, error) {
-            model.qGetWidgetInfo.query({aWidgetId: +aWidgetId}, callback, error);
+            model.qGetWidgetViaID.query({aWidgetId: +aWidgetId}, callback, error);
+        };
+        
+        /*
+         * @get /getWidgetData
+         */
+        self.getWidgetData = function (aWidgetId, callback, error) {
+            model.qGetWidgetData.query({aWidgetId: +aWidgetId}, callback, error);
         };
 
         /*

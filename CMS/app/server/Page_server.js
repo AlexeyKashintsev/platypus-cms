@@ -85,6 +85,20 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         };
         
         /*
+         * @get /getWidgetInfo
+         */
+        self.getWidgetInfo = function(aWidgetId, callback, error) {
+            widget_API.getWidgetInfo(aWidgetId, callback, error);
+        };
+        
+        /*
+         * @get /getWidgetData
+         */
+        self.getWidgetData = function(aWidgetId, callback, error) {
+            widget_API.getWidgetData(aWidgetId, callback, error);
+        };
+        
+        /*
          * @get/changePageInfo
          */
         self.changePageInfo = function (aPageInfo, callback, error) {

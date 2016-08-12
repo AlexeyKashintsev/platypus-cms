@@ -4,5 +4,5 @@
  * @name qGetWidgets
  * @public
  */
-Select *
+Select t.widget_id, t.name
 from widget t

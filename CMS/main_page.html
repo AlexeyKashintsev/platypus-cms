@@ -27,6 +27,12 @@
                         <button class="button-delete" @click="deletePage(item.page_inf)">-</button>
                     </div>
                     <button class="button-create" @click="createPage()">+</button>
+                    <li v-if="page_list" v-for="item in page_items" @click="pageSelected(item.page_inf.page_id)">
+                        {{ item.page_inf.page_name }}
+                    </li>
+                    <li v-if="widget_list" v-for="item in widget_items" @click="widgetSelected(item.widget_inf.widget_id)">
+                        {{ item.widget_inf.name }}
+                    </li>
                 </ul>
             </div>
             <div id="side-bar-footer" v-show="show">
@@ -121,11 +127,11 @@
                 </div>
                 <label for="code">Code</label>
                 <div>
-                    <textarea  id="code" ></textarea>
+                    <textarea  id="code" v-model="currentWidget.widget_inf.layout"></textarea>
                 </div>
                 <div class="main-buttons">
+                    <button v-on:click="reloadPage">Cancel</button>
                     <button>Save</button>
-                    <button>Cancel</button>
 
                 </div>
             </div>

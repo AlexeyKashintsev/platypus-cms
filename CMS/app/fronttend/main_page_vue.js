@@ -60,22 +60,30 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
         var pages_loaded = new Promise(function (res, err) {
             console.log('Loading ... First page');
             Server.getMeta(page_list[0].page_id, function (data) {
-                Server.getWidgetsList(function (w_list) {
-                    console.log(w_list);
-                    w_list.forEach(function (widget) {
-                        widgetModel.push(widget);
-                    });
-                    global.parseMetaInfo(data, function (meta) {
-                        pageModel.push({
-                            page_inf: page_list[0],
-                            meta_inf: meta
-                        });
-                        for (var i = 1; i < page_list.length; i++) {
+                global.parseMetaInfo(data, function (meta) {
+                    Server.getWidgetInfo(widget_list[0].widget_id, function (widget) {
+                        Server.getWidgetData(widget_list[0].widget_id, function (widget_data) {
                             pageModel.push({
-                                page_inf: page_list[i]
+                                page_inf: page_list[0],
+                                meta_inf: meta
                             });
-                        }
-                        res('First page - Loaded');
+                            widgetModel.push({
+                                widget_inf: widget[0],
+                                data_inf: widget_data
+                            });
+                            for (var i = 1; i < widget_list.length; i++) {
+                                widgetModel.push({
+                                    widget_inf: widget_list[i]
+                                });
+                            }
+                            for (var i = 1; i < page_list.length; i++) {
+                                pageModel.push({
+                                    page_inf: page_list[i]
+                                });
+                            }
+                            res('First page - Loaded');
+                        });
+
                     });
                 });
             });
@@ -89,6 +97,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     widgetModel: widgetModel,
                     currentPage: pageModel[0],
                     currentView: views[0],
+                    currentWidget: widgetModel[0]
                 },
                 components: {
                     'pageHeader': {
@@ -150,7 +159,18 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         }
                     },
                     'widgetEditor': {
-                        template: '#widget-editor-template'
+                        template: '#widget-editor-template',
+                        data: function () {
+                            return {
+                                currentWidget: widgetModel[0],
+                            };
+                        },
+                        events: {
+                            widgetSelected: function (widget) {
+                                this.$set('currentWidget', widget);
+                                //console.log(widget);
+                            }
+                        }
                     },
                     'sideBar': {
                         template: '#side-bar-template',
@@ -178,15 +198,14 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             iconToggle: String
                         },
                         methods: {
-                            itemSelected: function (name) {
-                                this.$dispatch('itemSelected', name);
+                            pageSelected: function (name) {
+                                this.$dispatch('pageSelected', name);
                             },
-                            deletePage:function(page_inf){
-                                this.$dispatch('deletePage',page_inf);
+                            widgetSelected: function (name) {
+                                this.$dispatch('widgetSelected', name);
                             },
                             createPage: function(){
                                 this.$dispatch('createPage');
-
                             }
                         },
                         watch: {
@@ -251,20 +270,35 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             }(i, cur_id, page_id));
                         }
                     },
-                    deletePage: function (page_id) {
-                        Server.deletePage(page_id,function (txt) {
-                            alert(txt);
-                        });
-
-                    },
+                    selectWidget: function (widget_id) {
+                        var self = this;
+                        var cur_id = this.currentWidget.widget_inf.widget_id;
+                        for (var i = 0; i < this.widgetModel.length; i++) {
+                            (function (s, cur_Id, widget_id) {
+                                if (self.widgetModel[s].widget_inf.widget_id === widget_id) {
+                                    if (widget_id !== cur_Id) {
+                                        Server.getWidgetInfo(self.widgetModel[s].widget_inf.widget_id, function (w_inf) {
+                                            Server.getWidgetData(self.widgetModel[s].widget_inf.widget_id, function (data) {
+                                                self.widgetModel[s].widget_inf = w_inf[0];
+                                                self.$set('currentWidget', self.widgetModel[s]);
+                                                self.$broadcast('widgetSelected', self.widgetModel[s]);
+                                            });
+                                        });
+                                    }
+                                }
+                            }(i, cur_id, widget_id));
+                        }
                     createPage: function(){
                         Server.addPageToDB();
 
                     }
                 },
                 events: {
-                    itemSelected: function (pageName) {
-                        this.selectPage(pageName);
+                    pageSelected: function (page_id) {
+                        this.selectPage(page_id);
+                    },
+                    widgetSelected: function (widget_id) {
+                        this.selectWidget(widget_id);
                     },
                     reloadPage: function () {
                         var self = this;
