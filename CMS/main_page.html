@@ -17,12 +17,16 @@
             </div>
             <div id="side-bar-content" v-show="show">
                 <ul >
-                    <li v-if="page_list" v-for="item in page_items" @click="itemSelected(item.page_inf.page_id)">
-                        {{ item.page_inf.page_name }}
-                    </li>
-                    <li v-if="widget_list" v-for="item in widget_items" @click="itemSelected(item.page_inf.page_id)">
-                        {{ item.name }}
-                    </li>
+                    <div  v-for="item in page_items">
+                        <li v-if="page_list" @click="itemSelected(item.page_inf.page_id)">
+                            {{ item.page_inf.page_name }}
+                        </li>
+                        <li v-if="widget_list" @click="itemSelected(item.page_inf.page_id)">
+                            {{ item.name }}
+                        </li>
+                        <button class="button-delete" @click="deletePage(item.page_inf)">-</button>
+                    </div>
+                    <button class="button-create" @click="createPage()">+</button>
                 </ul>
             </div>
             <div id="side-bar-footer" v-show="show">

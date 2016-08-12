@@ -180,6 +180,13 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         methods: {
                             itemSelected: function (name) {
                                 this.$dispatch('itemSelected', name);
+                            },
+                            deletePage:function(page_inf){
+                                this.$dispatch('deletePage',page_inf);
+                            },
+                            createPage: function(){
+                                this.$dispatch('createPage');
+
                             }
                         },
                         watch: {
@@ -243,6 +250,16 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 }
                             }(i, cur_id, page_id));
                         }
+                    },
+                    deletePage: function (page_id) {
+                        Server.deletePage(page_id,function (txt) {
+                            alert(txt);
+                        });
+
+                    },
+                    createPage: function(){
+                        Server.addPageToDB();
+
                     }
                 },
                 events: {
@@ -286,6 +303,16 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     },
                     viewChanged: function (name) {
                         this.$broadcast('changeSideBar', name);
+                    },
+                    deletePage: function (page_inf) {
+                        if (confirm('Удалить '+page_inf.page_name))
+                        {
+                            this.deletePage(page_inf.page_id);
+                        }
+                    },
+                    createPage: function(){
+                        this.createPage();
+
                     }
                 }
             });
