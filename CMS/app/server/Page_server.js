@@ -4,11 +4,12 @@
  * @stateless
  * @public 
  */
-define('Page_server', ['orm', 'page_display_API', 'page_creator_API'], function (Orm, Page_display_API, Page_creator_API, ModuleName) {
+define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_editor_API'], function (Orm, Page_display_API, Page_creator_API, Page_editor_API, ModuleName) {
     function module_constructor() {
         var self = this
         , page_display_API = new Page_display_API()
-        , page_creator_API = new Page_creator_API();
+        , page_creator_API = new Page_creator_API()
+        , page_editor_API = new Page_editor_API();
 
         /*
          * @get /createPage
@@ -54,17 +55,40 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API'], function 
             });
         };
         
+        /*
+         * @get/getPageList
+         */
         self.getPageList = function (callback, error) {
             page_display_API.getPagesList(callback, error);
         };
         
+        /*
+         * @get/getPageInfo
+         */
         self.getPageInfo = function (aPageId, callback, error) {
             page_display_API.getPageInfo(aPageId, callback, error);
         };
         
+        /*
+         * @get/getMeta
+         */
         self.getMeta = function (aPageId, callback, error) {
             page_display_API.getMetaInformation(aPageId, callback, error);
-        }
+        };
+        
+        /*
+         * @get/changePageInfo
+         */
+        self.changePageInfo = function (aPageInfo, callback, error) {
+            page_editor_API.changePageInfo(aPageInfo, callback, error);
+        };
+        
+        /*
+         * @get/changePageMetaInfo
+         */
+        self.changePageMetaInfo = function (aPageId, aMetaInfo, callback, error) {
+            page_editor_API.changePageMetaInfo(aPageId, aMetaInfo, callback, error);
+        };
     }
     return module_constructor;
 });

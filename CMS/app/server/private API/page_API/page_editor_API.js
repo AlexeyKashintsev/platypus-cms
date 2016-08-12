@@ -78,7 +78,7 @@ define('page_editor_API', ['orm', 'id'], function (Orm, Id, ModuleName) {
         };
 
         /*
-         * @get /changeInfo
+         * @get /changePageInfo
          */
         self.changePageInfo = function (aPageInfo, callback, error) {
             model.qGetPageInfoViaId.params.aPageId = +aPageInfo.page_id;

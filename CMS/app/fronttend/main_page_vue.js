@@ -52,7 +52,6 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
             console.log('Loading ... First page');
             Server.getMeta(page_list[0].page_id, function (data) {
                 global.parseMetaInfo(data, function (meta) {
-                    console.log(meta);
                     pageModel.push({
                         page_inf: page_list[0],
                         meta_inf: meta
@@ -73,7 +72,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 data: {
                     pageModel: pageModel,
                     currentPage: pageModel[0],
-                    currentView: views[0]
+                    currentView: views[0],
                 },
                 components: {
                     'pageHeader': {
@@ -110,9 +109,6 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 }
                             }
                         },
-                        ready: function () {
-                            console.log(this.currentPage);
-                        },
                         events: {
                             itemSelected: function (page) {
                                 this.$set('currentPage', page);
@@ -128,12 +124,13 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                     this.addingKeyword = '';
                                 }
                             },
-                            s1: function () {
-                                console.log(this.currentPage.meta_inf.author, this.currentPage.page_inf.page_name);
+                            reloadPage: function () {
+                                this.$dispatch('reloadPage');
                             },
-                            s2: function (a) {
-                                console.log(a);
+                            savePage: function () {
+                                this.$dispatch('savePage');
                             }
+                            //this
                         }
                     },
                     'widgetEditor': {
@@ -158,7 +155,6 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                         methods: {
                             itemSelected: function (name) {
                                 this.$dispatch('itemSelected', name);
-
                             }
                         },
                         watch: {
@@ -181,18 +177,18 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                     if (page_Id !== cur_Id) {
                                         Server.getPageInfo(cur_Id, function (page_inf) {
                                             self.currentPage.page_inf = page_inf[0];
-                                        });
-                                        Server.getPageInfo(page_Id, function (page_inf) {
-                                            Server.getMeta(page_Id, function (data) {
-                                                global.parseMetaInfo(data, function (meta) {
-                                                    self.pageModel[s].page_inf = page_inf[0];
-                                                    self.pageModel[s].meta_inf = meta;
-                                                    self.$set('currentPage', self.pageModel[s]);
-                                                    self.$broadcast('itemSelected', self.currentPage);
+                                            Server.getPageInfo(page_Id, function (page_inf) {
+                                                Server.getMeta(page_Id, function (data) {
+                                                    global.parseMetaInfo(data, function (meta) {
+                                                        self.pageModel[s].page_inf = page_inf[0];
+                                                        self.pageModel[s].meta_inf = meta;
+                                                        self.$set('currentPage', self.pageModel[s]);
+                                                        self.$broadcast('itemSelected', self.currentPage);
+                                                    });
                                                 });
+                                            }, function (err) {
+                                                console.log(err);
                                             });
-                                        }, function (err) {
-                                            console.log(err);
                                         });
                                     }
                                 }
@@ -203,6 +199,41 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                 events: {
                     itemSelected: function (pageName) {
                         this.selectPage(pageName);
+                    },
+                    reloadPage: function () {
+                        var self = this;
+                        for (var i = 0; i < this.pageModel.length; i++) {
+                            (function (s, page_Id) {
+                                if (self.pageModel[s].page_inf.page_id === page_Id) {
+                                    Server.getPageInfo(page_Id, function (page_inf) {
+                                        Server.getMeta(page_Id, function (data) {
+                                            global.parseMetaInfo(data, function (meta) {
+                                                self.pageModel[s].page_inf = page_inf[0];
+                                                self.pageModel[s].meta_inf = meta;
+                                                self.$set('currentPage', self.pageModel[s]);
+                                                self.$broadcast('itemSelected', self.currentPage);
+                                            });
+                                        });
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
+                                }
+                            }(i, this.currentPage.page_inf.page_id));
+                        }
+                    },
+                    savePage: function () {
+                        var self = this;
+                        for (var i = 0; i < this.pageModel.length; i++) {
+                            (function (s, page_Id) {
+                                if (self.pageModel[s].page_inf.page_id === page_Id) {
+                                    Server.changePageInfo(self.pageModel[s].page_inf, function (Text) {
+                                        console.log(Text);
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
+                                }
+                            }(i, this.currentPage.page_inf.page_id));
+                        }
                     }
                 }
             });

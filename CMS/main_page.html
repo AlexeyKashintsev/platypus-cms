@@ -42,7 +42,7 @@
                     Page name
                 </label>
                 <div>
-                    <input type="text" id="pageName" v-model="currentPage.page_inf.page_name"  >
+                    <input type="text" id="pageName" v-model="currentPage.page_inf.page_name" >
                 </div>
                 <label for="pageURL">
                     Page URL
@@ -56,7 +56,7 @@
                 </label>
                 <div>
                     <label for="author">Author</label>
-                    <input type="text" id="author" v-model="currentPage.meta_inf.author" @click="s1" @change="s2(a)">
+                    <input type="text" id="author" v-model="currentPage.meta_inf.author">
                 </div>
                 <div>
                     <label for="title">Title</label>
@@ -87,8 +87,8 @@
                     <input type="text"  v-model="currentPage.page_inf.page_name"  placeholder="enter">
                 </div>
                 <div class="main-buttons">
-                    <button @click="s1">Save</button>
-                    <button>Cancel</button>
+                    <button v-on:click="savePage">Save</button>
+                    <button v-on:click="reloadPage">Cancel</button>
 
                 </div>
             </div>
