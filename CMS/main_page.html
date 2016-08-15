@@ -1,144 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="/cms/app/fronttend/vue.js"></script>
-    <script type="text/javascript" src="web/pwc/pwc.nocache.js" source-path="app" entry-point="fronttend/main_page_vue"></script>
-    <link rel="stylesheet" type="text/css" href="app/fronttend/stylesheets/sass/main.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script src="/cms/app/fronttend/vue.js"></script>
+        <script type="text/javascript" src="web/pwc/pwc.nocache.js" source-path="app" entry-point="fronttend/main_page_vue"></script>
+        <link rel="stylesheet" type="text/css" href="app/fronttend/stylesheets/sass/main.css">
+    </head>
 
-<body>
+    <body>
 
-<template id="side-bar-template">
-    <div id="side-bar">
-        <div id="side-bar-body">
-            <div id="side-bar-header" v-show="show">
-            </div>
-            <div id="side-bar-content" v-show="show">
-                <ul >
-                    <div  v-for="item in page_items">
-                        <li v-if="page_list" @click="itemSelected(item.page_inf.page_id)">
-                            {{ item.page_inf.page_name }}
-                        </li>
-                        <li v-if="widget_list" @click="itemSelected(item.page_inf.page_id)">
-                            {{ item.name }}
-                        </li>
-                        <button class="button-delete" @click="deletePage(item.page_inf)">-</button>
+        <template id="side-bar-template">
+            <div id="side-bar">
+                <div id="side-bar-body">
+                    <div id="side-bar-header" v-show="show">
                     </div>
-                    <button class="button-create" @click="createPage()">+</button>
-                    <li v-if="page_list" v-for="item in page_items" @click="pageSelected(item.page_inf.page_id)">
-                        {{ item.page_inf.page_name }}
-                    </li>
-                    <li v-if="widget_list" v-for="item in widget_items" @click="widgetSelected(item.widget_inf.widget_id)">
-                        {{ item.widget_inf.name }}
-                    </li>
-                </ul>
+                    <div id="side-bar-content" v-show="show">
+                        <ul >
+                            <div v-if="page_list" v-for="item in page_items">
+                                <li v-if="page_list" @click="itemSelected(item.page_inf.page_id)">
+                                    {{ item.page_inf.page_name }}
+                                </li>
+                                <button class="button-delete" @click="deletePage(item)">-</button>
+                            </div>
+                            <div v-if="widget_list" v-for="item in widget_items">
+                                <li v-if="widget_list" @click="widgetSelected(item.widget_inf.widget_id)">
+                                    {{ item.widget_inf.name }}
+                                </li>
+                                <button class="button-delete" @click="deleteWidget(item)">-</button>
+                            </div>
+                            <button v-if="page_list" class="button-create" @click="createPage()">+</button>
+                            <button v-if="widget_list" class="button-create" @click="createWidget()">+</button>
+                        </ul>
+                    </div>
+                    <div id="side-bar-footer" v-show="show">
+                    </div>
+                </div>
+
+                <div v-if="showBar" id="side-bar-toggle" @click="show=!show">
+                    <span>
+                        {{iconToggle}}
+                    </span>
+                </div>
             </div>
-            <div id="side-bar-footer" v-show="show">
-            </div>
-        </div>
+        </template>
 
-        <div v-if="showBar" id="side-bar-toggle" @click="show=!show">
-            <span>
-                {{iconToggle}}
-            </span>
-        </div>
-    </div>
-</template>
+        <template id="page-editor-template">
+            <div class="view page-editor">
+                <div class="editor-form">
+                    <div class="form">
+                        <label for="pageName">
+                            Page name
+                        </label>
+                        <div>
+                            <input type="text" id="pageName" v-model="currentPage.page_inf.page_name" >
+                        </div>
+                        <label for="pageURL">
+                            Page URL
+                        </label>
+                        <div>
+                            <input type="text" id="pageURL"  v-model="currentPage.page_inf.url">
+                        </div>
 
-<template id="page-editor-template">
-    <div class="view page-editor">
-        <div class="editor-form">
-            <div class="form">
-                <label for="pageName">
-                    Page name
-                </label>
-                <div>
-                    <input type="text" id="pageName" v-model="currentPage.page_inf.page_name" >
-                </div>
-                <label for="pageURL">
-                    Page URL
-                </label>
-                <div>
-                    <input type="text" id="pageURL"  v-model="currentPage.page_inf.url">
-                </div>
-
-                <label>
-                    Meta
-                </label>
-                <div>
-                    <label for="author">Author</label>
-                    <input type="text" id="author" v-model="currentPage.meta_inf.author">
-                </div>
-                <div>
-                    <label for="title">Title</label>
-                    <input type="text" id="title"  v-model="currentPage.meta_inf.title">
-                </div>
-                <div>
-                    <label for="charset">Charset</label>
-                    <input type="text" id="charset"  v-model="currentPage.meta_inf.charset">
-                </div>
-                <div>
-                    <label for="description">Description</label>
-                    <textarea id="description"  v-model="currentPage.meta_inf.description"></textarea>
-                </div>
-                <div>
-                    <label for="keywords">Keywords</label>
-                    <input type="text"  @keyup.enter="addKeyword(addingKeyword)" v-model="addingKeyword" placeholder="enter to add">
-                    <div id="keywords">
-                        <div id="keyword" v-for="keyword in currentPage.meta_inf.keywords" >
-                            <input type="text"  v-model="keyword">
-                            <button class="add-keyword" @click="deleteKeyword(keyword)">-</button>
+                        <label>
+                            Meta
+                        </label>
+                        <div>
+                            <label for="author">Author</label>
+                            <input type="text" id="author" v-model="currentPage.meta_inf.author">
+                        </div>
+                        <div>
+                            <label for="title">Title</label>
+                            <input type="text" id="title"  v-model="currentPage.meta_inf.title">
+                        </div>
+                        <div>
+                            <label for="charset">Charset</label>
+                            <input type="text" id="charset"  v-model="currentPage.meta_inf.charset">
+                        </div>
+                        <div>
+                            <label for="description">Description</label>
+                            <textarea id="description"  v-model="currentPage.meta_inf.description"></textarea>
+                        </div>
+                        <div>
+                            <label for="keywords">Keywords</label>
+                            <input type="text"  @keyup.enter="addKeyword(addingKeyword)" v-model="addingKeyword" placeholder="enter to add">
+                            <div id="keywords">
+                                <div id="keyword" v-for="keyword in currentPage.meta_inf.keywords" >
+                                    <input type="text"  v-model="keyword">
+                                    <button class="add-keyword" @click="deleteKeyword(keyword)">-</button>
+                                </div>
+                            </div>
+                        </div>
+                        <label>
+                            Template
+                        </label>
+                        <div>
+                            <input type="text"  v-model="currentPage.page_inf.page_name"  placeholder="enter">
+                        </div>
+                        <div class="main-buttons">
+                            <button v-on:click="reloadPage">Cancel</button>
+                            <button v-on:click="savePage">Save</button> 
                         </div>
                     </div>
                 </div>
-                <label>
-                    Template
-                </label>
-                <div>
-                    <input type="text"  v-model="currentPage.page_inf.page_name"  placeholder="enter">
-                </div>
-                <div class="main-buttons">
-                    <button v-on:click="reloadPage">Cancel</button>
-                    <button v-on:click="savePage">Save</button> 
+            </div>
+        </template>
+
+        <template id="page-header-template">
+            <div id="page-header">
+                <button v-for="view in views" :class="{ 'active-button': view.name === currentView.name}"
+                        @click="viewSelected(view)">
+                        {{view.name}}
+            </button>
+        </div>
+    </template>
+
+    <template id="widget-editor-template">
+        <div class="view widget-editor">
+            <div class="editor-form">
+                <div class="form">
+                    <label>Data</label>
+                    <div class="data_fields">
+                        <div v-for="item in widget_data">
+                        {{item.data_name}}:
+                        <input type="text" v-model="item.data_value" >
+                    </div>
+                    </div>
+                    <label for="code">Code</label>
+                    <div>
+                        <textarea  id="code" v-model="currentWidget.widget_inf.layout"></textarea>
+                    </div>
+                    <div class="main-buttons">
+                        <button v-on:click="reloadPage">Cancel</button>
+                        <button>Save</button>
+
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</template>
-
-<template id="page-header-template">
-    <div id="page-header">
-        <button v-for="view in views" :class="{ 'active-button': view.name === currentView.name}"
-                @click="viewSelected(view)">
-            {{view.name}}
-        </button>
-    </div>
-</template>
-
-<template id="widget-editor-template">
-    <div class="view widget-editor">
-        <div class="editor-form">
-            <div class="form">
-                <label for="data">Data</label>
-                <div>
-                    <textarea  id="data" ></textarea>
-                </div>
-                <label for="code">Code</label>
-                <div>
-                    <textarea  id="code" v-model="currentWidget.widget_inf.layout"></textarea>
-                </div>
-                <div class="main-buttons">
-                    <button v-on:click="reloadPage">Cancel</button>
-                    <button>Save</button>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-</template>
+    </template>
 
     <div id="page">
         <page-header :current-view.sync="currentView"></page-header>

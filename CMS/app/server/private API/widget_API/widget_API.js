@@ -96,7 +96,7 @@ define('widget_API', ['orm'], function (Orm, ModuleName) {
          * @get /createWidget
          */
         self.createWidget = function (aWidgetInfo, aWidgetData, callback, error) {
-            model.qGetWidgetsViaID.params.aPageId = 'h';
+            model.qGetWidgetsViaID.params.aWidgetId = 'h';
             model.qGetWidgetsViaID.requery(function () {
                 model.qGetWidgetsViaID.push({
                     widget_id: aWidgetInfo.widget_id,
@@ -119,6 +119,25 @@ define('widget_API', ['orm'], function (Orm, ModuleName) {
                         error(err);
                     });
                 });
+            });
+        };
+        
+        /*
+         * @get /deleteWidget
+         */
+        self.deleteWidget = function (aWidgetId, callback, error) {
+            model.qGetWidgetInfo.params.aWidgetId = +aWidgetId;
+            model.qGetWidgetInfo.requery(function () {
+                if (model.qGetWidgetInfo.length) {
+                    model.qGetWidgetInfo.splice(model.qGetWidgetInfo.indexOf(model.qGetWidgetInfo), 1);
+                    model.save(function () {
+                        callback('Succes!');
+                    }, function (err) {
+                        error(err);
+                    });
+                } else {
+                    error('Not found!');
+                }
             });
         };
     }

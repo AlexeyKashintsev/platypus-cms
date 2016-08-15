@@ -118,7 +118,14 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         self.deletePage = function (aPageId, callback, error) {
             page_editor_API.deletePage(aPageId, callback, error);
         };
-
+        
+        /*
+         * @get /deleteWidget
+         */
+        self.deleteWidget = function (aWidgetId, callback, error) {
+            widget_API.deleteWidget(aWidgetId, callback, error);
+        };
+        
         /*
          * @get/addPageToDB
          */

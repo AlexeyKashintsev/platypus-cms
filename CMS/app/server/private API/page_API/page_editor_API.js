@@ -29,15 +29,12 @@ define('page_editor_API', ['orm', 'id'], function (Orm, Id, ModuleName) {
          * @get /createPage
          */
         self.createPage = function (aPageInfo, callback, error) {
-            model.qGetPageInfoViaId.params.aPageId = 'h';
+            model.qGetPageInfoViaId.params.aPageId = 0000;
             model.qGetPageInfoViaId.requery(function () {
                 model.qGetPageInfoViaId.push({
                     page_id: aPageInfo.page_id,
                     name: aPageInfo.name,
-                    author: aPageInfo.author,
-                    url: aPageInfo.url,
-                    template_id: aPageInfo.template_id,
-                    language_id: aPageInfo.language_id
+                    author: aPageInfo.author
                 });
                 model.save(function () {
                     callback('Succes!');

@@ -62,14 +62,14 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
             Server.getMeta(page_list[0].page_id, function (data) {
                 global.parseMetaInfo(data, function (meta) {
                     Server.getWidgetInfo(widget_list[0].widget_id, function (widget) {
-                        Server.getWidgetData(widget_list[0].widget_id, function (widget_data) {
+                        Server.getWidgetData(widget_list[0].widget_id, function (data_inf) {
                             pageModel.push({
                                 page_inf: page_list[0],
                                 meta_inf: meta
                             });
                             widgetModel.push({
                                 widget_inf: widget[0],
-                                data_inf: widget_data
+                                widget_data: data_inf
                             });
                             for (var i = 1; i < widget_list.length; i++) {
                                 widgetModel.push({
@@ -165,10 +165,26 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 currentWidget: widgetModel[0],
                             };
                         },
+                        props: {
+                            widget_data: {
+                                type: Array,
+                                default: function () {
+                                    return widgetModel[0].widget_data;
+                                }
+                            },
+                        },
+                        methods: {
+                            reloadPage: function () {
+                                console.log(this.widget_data);
+                                //this.$dispatch('reloadPage');
+                            }
+                        },
                         events: {
                             widgetSelected: function (widget) {
                                 this.$set('currentWidget', widget);
-                                //console.log(widget);
+                            },
+                            dataLoaded: function (data) {
+                                this.widget_data = data;
                             }
                         }
                     },
@@ -204,8 +220,25 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             widgetSelected: function (name) {
                                 this.$dispatch('widgetSelected', name);
                             },
-                            createPage: function(){
-                                this.$dispatch('createPage');
+                            createPage: function () {
+                                if (confirm('Создать страницу?'))
+                                    this.$dispatch('createPage');
+                            },
+                            createWidget: function () {
+                                if (confirm('Создать виджет?'))
+                                    this.$dispatch('createWidget');
+                            },
+                            deletePage: function (item) {
+                                if (confirm('Удалить страницу: ' + item.page_inf.page_name))
+                                {
+                                    this.$dispatch('deletePage', item);
+                                }
+                            },
+                            deleteWidget: function (item) {
+                                if (confirm('Удалить виджет: ' + item.widget_inf.name))
+                                {
+                                    this.$dispatch('deleteWidget', item);
+                                }
                             }
                         },
                         watch: {
@@ -238,7 +271,7 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                         console.log(name);
                                         break;
                                 }
-                            }
+                            },
                         }
                     }
                 },
@@ -279,6 +312,8 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                     if (widget_id !== cur_Id) {
                                         Server.getWidgetInfo(self.widgetModel[s].widget_inf.widget_id, function (w_inf) {
                                             Server.getWidgetData(self.widgetModel[s].widget_inf.widget_id, function (data) {
+                                                self.widgetModel[s].widget_data = data;
+                                                self.$broadcast('dataLoaded', data);
                                                 self.widgetModel[s].widget_inf = w_inf[0];
                                                 self.$set('currentWidget', self.widgetModel[s]);
                                                 self.$broadcast('widgetSelected', self.widgetModel[s]);
@@ -288,9 +323,6 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                 }
                             }(i, cur_id, widget_id));
                         }
-                    createPage: function(){
-                        Server.addPageToDB();
-
                     }
                 },
                 events: {
@@ -338,15 +370,54 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     viewChanged: function (name) {
                         this.$broadcast('changeSideBar', name);
                     },
-                    deletePage: function (page_inf) {
-                        if (confirm('Удалить '+page_inf.page_name))
-                        {
-                            this.deletePage(page_inf.page_id);
-                        }
+                    createPage: function () {
+                        var self = this;
+                        console.log('1');
+                        var Id = id.generate();
+                        Server.addPageToDB({
+                            page_id: Id,
+                            name: '1',
+                            author: '',
+                            url: '',
+                            template_id: '',
+                            language_id: ''
+                        }, function (Text) {
+                            console.log(Text);
+                            self.pageModel.push({
+                                page_inf: {
+                                    page_id: Id,
+                                    name: '1',
+                                    author: '',
+                                    url: '',
+                                    template_id: '',
+                                    language_id: ''
+                                }
+                            });
+                            console.log(self.pageModel);
+                        }, function (err) {
+                            console.log(err);
+                        });
                     },
-                    createPage: function(){
-                        this.createPage();
-
+                    createWidget: function () {
+                        console.log('2');
+                    },
+                    deletePage: function (item) {
+                        var self = this;
+                        Server.deletePage(item.page_inf.page_id, function (Text) {
+                            self.pageModel.splice(self.pageModel.indexOf(item), 1);
+                            console.log(Text);
+                        }, function (err) {
+                            console.log(err);
+                        });
+                    },
+                    deleteWidget: function (item) {
+                        var self = this;
+                        Server.deleteWidget(item.widget_inf.widget_id, function (Text) {
+                            self.widgetModel.splice(self.widgetModel.indexOf(item), 1);
+                            console.log(Text);
+                        }, function (err) {
+                            console.log(err);
+                        });
                     }
                 }
             });
