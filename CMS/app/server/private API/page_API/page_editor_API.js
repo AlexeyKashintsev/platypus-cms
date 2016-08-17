@@ -33,7 +33,7 @@ define('page_editor_API', ['orm', 'id'], function (Orm, Id, ModuleName) {
             model.qGetPageInfoViaId.requery(function () {
                 model.qGetPageInfoViaId.push({
                     page_id: aPageInfo.page_id,
-                    name: aPageInfo.name,
+                    page_name: aPageInfo.page_name,
                     author: aPageInfo.author
                 });
                 model.save(function () {

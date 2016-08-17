@@ -102,7 +102,8 @@ define('page_creator_API', ['Settings', 'files', 'FileUtils', 'logger'], functio
                             });
                             aWidget.forEach(function (data) {
                                 self.inputData(data.layout, data.data_name, data.data_value, function (newLayout) {
-                                    Logger.info(newLayout);
+                                    newLayout = newLayout.replace(/\n/g, '\n\t\t\t');
+                                    newLayout = '\n\t\t\t' + newLayout;
                                     self.inputVueWidget(newLayout, function () {}, error);
                                 }, error);
                             });

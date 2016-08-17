@@ -18,7 +18,7 @@
                     <div id="side-bar-content" v-show="show">
                         <ul >
                             <div v-if="page_list" v-for="item in page_items">
-                                <li v-if="page_list" @click="itemSelected(item.page_inf.page_id)">
+                                <li v-if="page_list" @click="pageSelected(item.page_inf.page_id)">
                                     {{ item.page_inf.page_name }}
                                 </li>
                                 <button class="button-delete" @click="deletePage(item)">-</button>
@@ -99,7 +99,8 @@
                         </div>
                         <div class="main-buttons">
                             <button v-on:click="reloadPage">Cancel</button>
-                            <button v-on:click="savePage">Save</button> 
+                            <button v-on:click="savePage">Save</button>
+                            <button v-on:click="createPage">Create</button>
                         </div>
                     </div>
                 </div>
@@ -121,9 +122,11 @@
                 <div class="form">
                     <label>Data</label>
                     <div class="data_fields">
+                        <input type="text" @keyup.enter="addDataField(addingData)" v-model="addingData" placeholder="enter to add">
                         <div v-for="item in widget_data">
                         {{item.data_name}}:
                         <input type="text" v-model="item.data_value" >
+                        <button class="add-data_field" @click="deleteDataField(item)">-</button>
                     </div>
                     </div>
                     <label for="code">Code</label>
@@ -131,8 +134,8 @@
                         <textarea  id="code" v-model="currentWidget.widget_inf.layout"></textarea>
                     </div>
                     <div class="main-buttons">
-                        <button v-on:click="reloadPage">Cancel</button>
-                        <button>Save</button>
+                        <button v-on:click="reloadWidget">Cancel</button>
+                        <button v-on:click="saveWidget">Save</button>
 
                     </div>
                 </div>

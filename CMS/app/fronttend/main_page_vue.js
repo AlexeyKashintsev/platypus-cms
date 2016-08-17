@@ -5,6 +5,8 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
     var widget_list;
 
     global.parseMetaInfo = function (data, callback, error) {
+        data[0].meta_inf = data[0].meta_inf.replace(/\n/g, '');
+        data[0].meta_inf = data[0].meta_inf.replace(/\t/g, '');
         var MetaInfo = {};
         var regExp_query, regExp_query1;
         regExp_query = /<title>(.*)<\/title>/;
@@ -24,6 +26,21 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
             }
         }
         callback(MetaInfo);
+    };
+
+    global.unparseMetaInfo = function (MetaInfo, callback, error) {
+        var meta = '';
+        meta = meta + '\t<title>' + MetaInfo.title + '</title>\n';
+        meta = meta + '\t<meta charset=\"' + MetaInfo.charset + '\">\n';
+        meta = meta + '\t<meta name="description" content=\"' + MetaInfo.description + '\" />\n';
+        var keywords = '';
+        MetaInfo.keywords.forEach(function (word) {
+            keywords = keywords + word + ',';
+        });
+        keywords = keywords.slice(0, -1);
+        meta = meta + '\t\<meta name="keywords" content=\"' + keywords + '\" />\n';
+        meta = meta + '\t\<meta name="author" content=\"' + MetaInfo.author + '\" />\n';
+        callback(meta);
     };
 
     var promise = new Promise(function (Resolve, Reject) {
@@ -58,38 +75,53 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
 //            template_id: ''
 //        });
         var pages_loaded = new Promise(function (res, err) {
-            console.log('Loading ... First page');
+            var ld = new Date();
+            console.info(ld.toLocaleDateString() + ' ' + ld.toLocaleTimeString() + ' INFO\t' + 'Loading ... First page');
             Server.getMeta(page_list[0].page_id, function (data) {
-                global.parseMetaInfo(data, function (meta) {
-                    Server.getWidgetInfo(widget_list[0].widget_id, function (widget) {
-                        Server.getWidgetData(widget_list[0].widget_id, function (data_inf) {
+                Server.getWidgetInfo(widget_list[0].widget_id, function (widget) {
+                    Server.getWidgetData(widget_list[0].widget_id, function (data_inf) {
+                        if (data.length) {
+                            global.parseMetaInfo(data, function (meta) {
+                                pageModel.push({
+                                    page_inf: page_list[0],
+                                    meta_inf: meta
+                                });
+                            });
+                        } else {
                             pageModel.push({
                                 page_inf: page_list[0],
-                                meta_inf: meta
+                                meta_inf: {
+                                    title: '',
+                                    charset: '',
+                                    author: '',
+                                    description: '',
+                                    keywords: ''
+                                }
                             });
-                            widgetModel.push({
-                                widget_inf: widget[0],
-                                widget_data: data_inf
-                            });
-                            for (var i = 1; i < widget_list.length; i++) {
-                                widgetModel.push({
-                                    widget_inf: widget_list[i]
-                                });
-                            }
-                            for (var i = 1; i < page_list.length; i++) {
-                                pageModel.push({
-                                    page_inf: page_list[i]
-                                });
-                            }
-                            res('First page - Loaded');
+                        }
+                        widgetModel.push({
+                            widget_inf: widget[0],
+                            widget_data: data_inf
                         });
-
+                        for (var i = 1; i < widget_list.length; i++) {
+                            widgetModel.push({
+                                widget_inf: widget_list[i]
+                            });
+                        }
+                        for (var i = 1; i < page_list.length; i++) {
+                            pageModel.push({
+                                page_inf: page_list[i]
+                            });
+                        }
+                        var ld = new Date();
+                        res(ld.toLocaleDateString() + ' ' + ld.toLocaleTimeString() + ' INFO\t' + 'First page - Loaded');
                     });
+
                 });
             });
         });
         pages_loaded.then(function (res) {
-            console.log(res);
+            console.info(res);
             new Vue({
                 el: 'body',
                 data: {
@@ -154,6 +186,13 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             },
                             savePage: function () {
                                 this.$dispatch('savePage');
+                            },
+                            createPage: function () {
+                                Server.createPage(this.currentPage.page_inf.page_id, function (res) {
+                                    console.log(res);
+                                }, function (err) {
+                                    console.log(err);
+                                });
                             }
                             //this
                         }
@@ -172,12 +211,34 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                     return widgetModel[0].widget_data;
                                 }
                             },
+                            addingData: {
+                                type: String,
+                                default: function () {
+                                    return '';
+                                }
+                            }
                         },
                         methods: {
-                            reloadPage: function () {
-                                console.log(this.widget_data);
-                                //this.$dispatch('reloadPage');
-                            }
+                            reloadWidget: function () {
+                                this.$dispatch('reloadWidget');
+                            },
+                            saveWidget: function () {
+                                this.$dispatch('saveWidget');
+                            },
+                            deleteDataField: function (item) {
+                                this.currentWidget.widget_data.$remove(item);
+                            },
+                            addDataField: function (item) {
+                                if (this.currentWidget.widget_data.indexOf(item) === -1) {
+                                    this.currentWidget.widget_data.unshift({
+                                        widget_data_id: id.generate(),
+                                        data_name: item,
+                                        data_value: ''
+                                    });
+                                    this.currentWidget.widget_data[0].data_name = item;
+                                    this.addingData = '';
+                                }
+                            },
                         },
                         events: {
                             widgetSelected: function (widget) {
@@ -256,19 +317,16 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                                         this.showBar = true;
                                         this.page_list = true;
                                         this.widget_list = false;
-                                        console.log(name);
                                         break;
                                     case 'Widget editor':
                                         this.showBar = true;
                                         this.page_list = false;
                                         this.widget_list = true;
-                                        console.log(name);
                                         break;
                                     case 'Resource gallery':
                                         this.showBar = false;
                                         this.page_list = false;
                                         this.widget_list = false;
-                                        console.log(name);
                                         break;
                                 }
                             },
@@ -276,29 +334,56 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                     }
                 },
                 methods: {
-                    selectPage: function (page_id) {
+                    selectPage: function (page_id, callback) {
                         var self = this;
+                        if (!callback) {
+                            callback = function () {
+                                return true;
+                            };
+                        }
                         var cur_id = this.currentPage.page_inf.page_id;
                         for (var i = 0; i < this.pageModel.length; i++) {
                             (function (s, cur_Id, page_Id) {
-                                if (self.pageModel[s].page_inf.page_id === page_Id) {
-                                    if (page_Id !== cur_Id) {
+                                if (page_Id !== cur_Id) {
+                                    if (self.pageModel[s].page_inf.page_id === cur_id) {
                                         Server.getPageInfo(cur_Id, function (page_inf) {
-                                            self.currentPage.page_inf = page_inf[0];
-                                            Server.getPageInfo(page_Id, function (page_inf) {
-                                                Server.getMeta(page_Id, function (data) {
-                                                    global.parseMetaInfo(data, function (meta) {
-                                                        self.pageModel[s].page_inf = page_inf[0];
-                                                        self.pageModel[s].meta_inf = meta;
-                                                        self.$set('currentPage', self.pageModel[s]);
-                                                        self.$broadcast('itemSelected', self.currentPage);
-                                                    });
-                                                });
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
+                                            self.pageModel[s].page_inf = page_inf[0];
                                         });
                                     }
+                                }
+                                if (self.pageModel[s].page_inf.page_id === page_Id) {
+                                    Server.getPageInfo(page_Id, function (page_inf) {
+                                        Server.getMeta(page_Id, function (data) {
+                                            if (data.length) {
+                                                global.parseMetaInfo(data, function (meta) {
+                                                    self.pageModel[s].page_inf = page_inf[0];
+                                                    self.pageModel[s].meta_inf = meta;
+                                                    self.$set('pageModel[s].meta_inf', meta);
+                                                    self.$set('currentPage', self.pageModel[s]);
+                                                    self.$broadcast('itemSelected', self.currentPage);
+                                                    callback();
+                                                });
+                                            } else {
+                                                var meta = {
+                                                    title: '',
+                                                    charset: '',
+                                                    author: '',
+                                                    description: '',
+                                                    keywords: []
+                                                };
+                                                self.pageModel[s].page_inf = page_inf[0];
+                                                self.pageModel[s].meta_inf = meta;
+                                                self.$set('pageModel[s].meta_inf', meta);
+                                                self.$set('currentPage', self.pageModel[s]);
+                                                self.$broadcast('itemSelected', self.currentPage);
+                                                callback();
+                                            }
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
                                 }
                             }(i, cur_id, page_id));
                         }
@@ -353,13 +438,37 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             }(i, this.currentPage.page_inf.page_id));
                         }
                     },
+                    reloadWidget: function () {
+                        var self = this;
+                        for (var i = 0; i < this.widgetModel.length; i++) {
+                            (function (s, widget_id) {
+                                if (self.widgetModel[s].widget_inf.widget_id === widget_id) {
+                                    Server.getWidgetInfo(self.widgetModel[s].widget_inf.widget_id, function (w_inf) {
+                                        Server.getWidgetData(self.widgetModel[s].widget_inf.widget_id, function (data) {
+                                            self.widgetModel[s].widget_data = data;
+                                            self.$broadcast('dataLoaded', data);
+                                            self.widgetModel[s].widget_inf = w_inf[0];
+                                            self.$set('currentWidget', self.widgetModel[s]);
+                                            self.$broadcast('widgetSelected', self.widgetModel[s]);
+                                        });
+                                    });
+                                }
+                            }(i, this.currentWidget.widget_inf.widget_id));
+                        }
+                    },
                     savePage: function () {
                         var self = this;
                         for (var i = 0; i < this.pageModel.length; i++) {
                             (function (s, page_Id) {
                                 if (self.pageModel[s].page_inf.page_id === page_Id) {
-                                    Server.changePageInfo(self.pageModel[s].page_inf, function (Text) {
-                                        console.log(Text);
+                                    Server.changePageInfo(self.pageModel[s].page_inf, function () {
+                                        global.unparseMetaInfo(self.pageModel[s].meta_inf, function (meta) {
+                                            Server.changePageMetaInfo(page_Id, meta, function (res) {
+                                                console.log(res);
+                                            }, function (err) {
+                                                console.log(err);
+                                            });
+                                        });
                                     }, function (err) {
                                         console.log(err);
                                     });
@@ -367,53 +476,121 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
                             }(i, this.currentPage.page_inf.page_id));
                         }
                     },
+                    saveWidget: function () {
+                        var self = this;
+                        for (var i = 0; i < this.widgetModel.length; i++) {
+                            (function (s, widget_Id) {
+                                if (self.widgetModel[s].widget_inf.widget_id === widget_Id) {
+                                    Server.changeWidgetInfo({
+                                        widget_id: widget_Id,
+                                        name: self.widgetModel[s].widget_inf.name,
+                                        author: 'ya',
+                                        description: '123',
+                                        layout: self.currentWidget.widget_inf.layout
+                                    }, function () {
+                                        Server.changeWidgetData(widget_Id, self.currentWidget.widget_data, function (Text) {
+                                            console.log(Text);
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+                                    }, function (err) {
+                                        console.log(err);
+                                    })
+                                }
+                            }(i, this.currentWidget.widget_inf.widget_id));
+                        }
+                    },
                     viewChanged: function (name) {
                         this.$broadcast('changeSideBar', name);
                     },
                     createPage: function () {
                         var self = this;
-                        console.log('1');
                         var Id = id.generate();
-                        Server.addPageToDB({
+                        Server.addPageToDb({
                             page_id: Id,
-                            name: '1',
-                            author: '',
-                            url: '',
-                            template_id: '',
-                            language_id: ''
+                            page_name: '1',
+                            author: ''
                         }, function (Text) {
                             console.log(Text);
                             self.pageModel.push({
                                 page_inf: {
                                     page_id: Id,
-                                    name: '1',
+                                    page_name: '1',
                                     author: '',
                                     url: '',
                                     template_id: '',
                                     language_id: ''
                                 }
                             });
-                            console.log(self.pageModel);
                         }, function (err) {
                             console.log(err);
                         });
                     },
                     createWidget: function () {
-                        console.log('2');
-                    },
-                    deletePage: function (item) {
                         var self = this;
-                        Server.deletePage(item.page_inf.page_id, function (Text) {
-                            self.pageModel.splice(self.pageModel.indexOf(item), 1);
+                        var Id = id.generate();
+                        Server.addWidgetToDb({
+                            widget_id: Id,
+                            name: '1',
+                            author: ''
+                        }, function (Text) {
                             console.log(Text);
+                            self.widgetModel.push({
+                                widget_inf: {
+                                    widget_id: Id,
+                                    name: '1',
+                                    author: ''
+                                }
+                            });
                         }, function (err) {
                             console.log(err);
                         });
                     },
+                    deletePage: function (item) {
+                        var self = this;
+                        var index = self.pageModel.indexOf(item);
+                        if (item.page_inf.page_id === self.currentPage.page_inf.page_id) {
+                            if (index === self.pageModel.length - 1) {
+                                self.selectPage(self.pageModel[index - 1].page_inf.page_id, function () {
+                                    Server.deletePage(item.page_inf.page_id, function (Text) {
+                                        self.pageModel.splice(index, 1);
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
+                                    self.pageModel.splice(index, 1);
+                                });
+                            } else {
+                                self.selectPage(self.pageModel[index + 1].page_inf.page_id, function () {
+                                    Server.deletePage(item.page_inf.page_id, function (Text) {
+                                        self.pageModel.splice(index, 1);
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
+                                    self.pageModel.splice(index, 1);
+                                });
+                            }
+                        } else {
+                            self.pageModel.splice(index, 1);
+                        }
+                    },
                     deleteWidget: function (item) {
                         var self = this;
                         Server.deleteWidget(item.widget_inf.widget_id, function (Text) {
-                            self.widgetModel.splice(self.widgetModel.indexOf(item), 1);
+                            var index = self.widgetModel.indexOf(item);
+                            if (item.widget_inf.widget_id === self.currentWidget.widget_inf.widget_id) {
+                                if (index === self.widgetModel.length - 1) {
+                                    self.selectWidget(self.widgetModel[index - 1].widget_inf.widget_id, function () {
+                                        self.widgetModel.splice(index, 1);
+                                    });
+                                } else {
+                                    self.selectWidget(self.widgetModel[index + 1].widget_inf.widget_id, function () {
+                                        self.widgetModel.splice(index, 1);
+                                    });
+                                }
+                            } else {
+                                self.widgetModel.splice(index, 1);
+                            }
+                            self.widgetModel.splice(index, 1);
                             console.log(Text);
                         }, function (err) {
                             console.log(err);

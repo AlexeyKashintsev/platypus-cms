@@ -106,12 +106,26 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         };
         
         /*
+         * @get/changeWidgetInfo
+         */
+        self.changeWidgetInfo = function (aWidget, callback, error) {
+            widget_API.changeWidgetInfo(aWidget, callback, error);
+        };
+        
+        /*
          * @get/changePageMetaInfo
          */
         self.changePageMetaInfo = function (aPageId, aMetaInfo, callback, error) {
             page_editor_API.changePageMetaInfo(aPageId, aMetaInfo, callback, error);
         };
-
+        
+        /*
+         * @get/changeWidgetData
+         */
+        self.changeWidgetData = function (aWidgetId, aWidgetData, callback, error) {
+            widget_API.changeWidgetData(aWidgetId, aWidgetData, callback, error);
+        };
+        
         /*
          * @get/deletePage
          */
@@ -127,10 +141,17 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
         };
         
         /*
-         * @get/addPageToDB
+         * @get/addPageToDb
          */
-        self.addPageToDB = function (aPageInfo, callback, error) {
+        self.addPageToDb = function (aPageInfo, callback, error) {
             page_editor_API.createPage(aPageInfo, callback, error);
+        };
+        
+        /*
+         * @get /addWidgetToDb
+         */
+        self.addWidgetToDb = function (aPageInfo, callback, error) {
+            widget_API.createWidget(aPageInfo, callback, error);
         };
     }
     return module_constructor;
