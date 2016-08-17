@@ -142,6 +142,31 @@ define('widget_API', ['orm', 'logger'], function (Orm, Logger, ModuleName) {
                 }
             });
         };
+
+        /*
+         * @get /getTextFromTemplate
+         */
+        self.getTextFromTemplate = function (data, callback) {
+            var startIndex = -1;
+            var buf;
+            var name;
+            var template = [];
+            var findWordInData = function (data, startindex, word) {
+                while ((startIndex = data.indexOf(word, startindex + 1)) !== -1) {
+                    return startIndex;
+                }
+                return null;
+            };
+
+            while ((startIndex = findWordInData(data, startIndex, "{{")) !== null) {
+                buf = startIndex;
+                if ((startIndex = findWordInData(data, startIndex, "}}")) !== null) {
+                    name = (data.substring(buf + 2, startIndex)).trim();
+                    template.push(name);
+                }
+            }
+            callback(template);
+        };
     }
     return module_constructor;
 });

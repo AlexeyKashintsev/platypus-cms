@@ -11,20 +11,21 @@ require(['environment', 'id', 'resource', 'rpc'], function (F, id, Resource, Rpc
 		},
 		components: {
 			'test2': {
-			    template:'<div style="width:80px; heidht: 80px; background-color: red"; display: inline-block;>{{name}}</div>',
-			    data: function() {
-			        return {
-			            name:'вывод 2 вид 2',
-			        }
-			    },
+			    template:'<div style="width:80px; heidht: 80px; background-color: red"; display: inline-block;>{{name}}{{name}}</div>',
+				data: function() {
+					 return {
+						name: 'вывод 2 вид 2',
+						name: 'вывод 2 вид 2',
+					}
+				},
 			},
 			'test1': {
 			    template:'{{name}}',
-			    data: function() {
-			        return {
-			            name:'вывод 1 вид 1',
-			        }
-			    },
+				data: function() {
+					 return {
+						name: 'вывод 1 вид 1',
+					}
+				},
 			},} 
 	});
 });

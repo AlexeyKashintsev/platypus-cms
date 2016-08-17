@@ -4,11 +4,12 @@
  * @stateless
  * @public
  */
-define('page_creator_API', ['Settings', 'files', 'FileUtils', 'logger'], function (Settings, Plat_Files, fileUtils, Logger, ModuleName) {
+define('page_creator_API', ['Settings', 'files', 'FileUtils', 'logger', 'widget_API'], function (Settings, Plat_Files, fileUtils, Logger, Widget_API, ModuleName) {
     function module_constructor() {
         var self = this;
         var localPagePath = Settings.localPagePath;
         var FileUtils = new fileUtils();
+        var widget_API = new Widget_API();
 
         /*
          * @get /createTemplate
@@ -85,13 +86,8 @@ define('page_creator_API', ['Settings', 'files', 'FileUtils', 'logger'], functio
         };
 
         /*
-         * @get /inputData
+         * @get /createPage
          */
-        self.inputData = function (aLayout, aDataName, aDataValue, callback, error) {
-            aLayout = aLayout.replace('<%' + aDataName + '%>', "'" + aDataValue + "'");
-            callback(aLayout);
-        };
-
         self.createPage = function (aPageName, aMetaInfo, aRootTemplate, aTemplate, aHtmlTemplate, aWidget, callback, error) {
             self.createTemplate(aPageName, aRootTemplate.styles, function () {
                 self.inputMetaInfo(aPageName, aMetaInfo, function () {
@@ -101,11 +97,26 @@ define('page_creator_API', ['Settings', 'files', 'FileUtils', 'logger'], functio
                                 self.inputHtmlWidget(aPageName, cat);
                             });
                             aWidget.forEach(function (data) {
-                                self.inputData(data.layout, data.data_name, data.data_value, function (newLayout) {
-                                    newLayout = newLayout.replace(/\n/g, '\n\t\t\t');
-                                    newLayout = '\n\t\t\t' + newLayout;
-                                    self.inputVueWidget(newLayout, function () {}, error);
-                                }, error);
+                                var str1 = data.layout.substr(data.layout.indexOf(',') + 1);
+                                data.layout = data.layout.slice(0, data.layout.indexOf(',') + 1);
+                                data.layout = data.layout + '\n\t\data: function() {\n\t\t\ return {' + str1;
+                                widget_API.getTextFromTemplate(data.layout, function (data_fields) {
+                                    var data_fields_length = data_fields.length;
+                                    for (var i = 0; i < data_fields_length; i++) {
+                                        if (data_fields[i] === data.data_name) {
+                                            if (i === 0) {
+                                                str1 = data.layout.substr(data.layout.indexOf('return {') + 8);
+                                                data.layout = data.layout.slice(0, data.layout.indexOf('return {') + 8);
+                                            }
+                                            data.layout = data.layout + '\n\t\t\t' + data_fields[i] + ': ' + "'" + data.data_value + "'" + ',';
+                                            if (i === data_fields_length - 1)
+                                                data.layout = data.layout + '\n\t\t\}' + '\n\t\},' + str1;
+                                        }
+                                    }
+                                });
+                                data.layout = data.layout.replace(/\n/g, '\n\t\t\t');
+                                data.layout = '\n\t\t\t' + data.layout;
+                                self.inputVueWidget(data.layout, function () {}, error);
                             });
                             callback('succes');
                         }, error);
