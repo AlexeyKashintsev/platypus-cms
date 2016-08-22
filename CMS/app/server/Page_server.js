@@ -4,7 +4,7 @@
  * @stateless
  * @public 
  */
-define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_editor_API', 'widget_API'], function (Orm, Page_display_API, Page_creator_API, Page_editor_API, Widget_API, ModuleName) {
+define('Page_server', ['orm', 'logger', 'page_display_API', 'page_creator_API', 'page_editor_API', 'widget_API'], function (Orm, Logger, Page_display_API, Page_creator_API, Page_editor_API, Widget_API, ModuleName) {
     function module_constructor() {
         var self = this
         , page_display_API = new Page_display_API()
@@ -123,7 +123,11 @@ define('Page_server', ['orm', 'page_display_API', 'page_creator_API', 'page_edit
          * @get/changeWidgetData
          */
         self.changeWidgetData = function (aWidgetId, aWidgetData, callback, error) {
-            widget_API.changeWidgetData(aWidgetId, aWidgetData, callback, error);
+            widget_API.changeWidgetData(aWidgetId, aWidgetData, function(text){
+                widget_API.mergeLayoutWithWidgetData(aWidgetId, function(){});
+                
+            }, error);
+            
         };
         
         /*

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><datamodel datasource="null">
-  <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979511384300" entityLocationX="323" entityLocationY="386" entityWidth="150" tableName="widget_data"/>
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979511384300" entityLocationX="238" entityLocationY="422" entityWidth="150" tableName="widget_data"/>
   <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979504239100" entityLocationX="411" entityLocationY="94" entityWidth="150" tableName="template"/>
   <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979510024100" entityLocationX="36" entityLocationY="310" entityWidth="150" tableName="widget"/>
+  <fieldsEntity entityHeight="200" entityIconified="false" entityId="147151236855989" entityLocationX="455" entityLocationY="337" entityWidth="150" tableName="structure"/>
   <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979487133300" entityLocationX="616" entityLocationY="73" entityWidth="150" tableName="page"/>
   <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979516313400" entityLocationX="222" entityLocationY="112" entityWidth="150" tableName="page_widgets"/>
   <fieldsEntity entityHeight="200" entityIconified="false" entityId="146979493962100" entityLocationX="671" entityLocationY="357" entityWidth="150" tableName="meta_inf"/>

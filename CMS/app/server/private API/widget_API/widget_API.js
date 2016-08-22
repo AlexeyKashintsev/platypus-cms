@@ -144,6 +144,25 @@ define('widget_API', ['orm', 'logger'], function (Orm, Logger, ModuleName) {
         };
 
         /*
+         * @get /deleteWidgetDataFromWidget
+         */
+        self.deleteWidgetDataFromWidget = function (aWidgetId, widgetData, callback, error) {
+            model.qGetWidgetData.params.aWidgetId = +aWidgetId;
+            model.qGetWidgetData.requery(function () {
+                if (model.qGetWidgetData.length) {
+                    model.qGetWidgetData.splice(model.qGetWidgetData.indexOf(widgetData), 1);
+                    model.save(function () {
+                        callback('Succes!');
+                    }, function (err) {
+                        error(err);
+                    });
+                } else {
+                    error('Not found!');
+                }
+            });
+        };
+
+        /*
          * @get /getTextFromTemplate
          */
         self.getTextFromTemplate = function (data, callback) {
@@ -166,6 +185,50 @@ define('widget_API', ['orm', 'logger'], function (Orm, Logger, ModuleName) {
                 }
             }
             callback(template);
+        };
+
+        /*
+         * @get /mergeCodeWithWidgetData
+         */
+        self.mergeLayoutWithWidgetData = function (aWidgetId, callback) {
+            self.getWidgetData(aWidgetId, function (widgetData) {//getting widgetData
+                self.getWidgetInfo(aWidgetId, function (widgetInfo) {//getting layout
+                    self.getTextFromTemplate(widgetInfo[0].layout, function (layoutTags) {//parse layout to tags
+                        Logger.info(layoutTags);
+                        for(i=0;i<layoutTags.length;i++){//adding new data
+                            var isFind = 0;
+                            for (j = 0; j < widgetData.length; j++) {
+                                if (widgetData[j].data_name === layoutTags[i]) {
+                                    isFind=1;
+                                    break;
+                                }
+                            }
+                            if(!isFind){                              
+                                widgetData.push({
+                                    data_name: layoutTags[i],
+                                    data_value: '',
+                                    widget_id: aWidgetId
+                                });
+                            }
+                        }
+                        for(i=0;i<widgetData.length;i++){//delete not used data
+                            var isFind = 0;
+                            for(j=0;j<layoutTags.length;j++){
+                                if (layoutTags[j] === widgetData[i].data_name) {
+                                    isFind=1;
+                                    break;
+                                }
+                            }
+                            if(!isFind){
+                                widgetData.splice(i, 1);
+                            }
+                        }
+                        self.changeWidgetData(aWidgetId, widgetData, callback);
+
+                    })
+                })
+            });
+
         };
     }
     return module_constructor;
